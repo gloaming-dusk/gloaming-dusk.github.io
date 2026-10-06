@@ -7,13 +7,13 @@ const release = await latestRelease();
 const partNames = release?.parts.map((part) => part.name) ?? [];
 const dateFormat = new Intl.DateTimeFormat('en', { dateStyle: 'long', timeZone: 'UTC' });
 ---
-<Base title="Download" description="Download the Gloam live ISO: a NixOS-based system that boots straight into the Shady 3D desktop.">
+<Base title="Download" description="Download the Gloam live ISO: a NixOS 26.05-based system with the Shady 3D desktop.">
   <section class="page-head">
     <div class="wrap">
       <span class="eyebrow">Download</span>
       <h1>Get Gloam</h1>
       <p class="lede">
-        One live ISO for x86_64 PCs. It boots into the full desktop without touching your disks,
+        One live ISO for x86_64 PCs, built on NixOS 26.05. It runs the full desktop without touching your disks,
         and doubles as a NixOS installer.
       </p>
     </div>

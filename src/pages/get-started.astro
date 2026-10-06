@@ -40,8 +40,8 @@ const keys = [
       <p>
         <a href="/download/">Download</a> the ISO, write it to a USB stick and boot from it. Pick
         <strong>Gloam … Live</strong> in the boot menu (it starts on its own after a few seconds).
-        Gloam logs the <code>nixos</code> user straight into Shady with the Afterglow sky; nothing on
-        your disks is touched.
+        Gloam starts at its greeter over the Afterglow sea. The live user <code>nixos</code> has no
+        password: press <strong>Enter</strong> and Shady opens. Nothing on your disks is touched.
       </p>
       <ul>
         <li>Network: open a terminal and run <code>nmtui</code> to join Wi-Fi.</li>
@@ -71,7 +71,7 @@ const keys = [
     <section id="greeter">
       <h2>3 · Logging in and out</h2>
       <p>
-        After you log out, the Gloam greeter appears over the same sea. In the live session the
+        The greeter appears at boot and whenever you log out. In the live session the
         <code>nixos</code> user has no password: press <strong>Enter</strong>. Up and Down choose the
         user, Tab the session:
       </p>
@@ -95,7 +95,7 @@ sudo nixos-install --flake /mnt/etc/nixos#gloam
 sudo reboot</code></pre>
       <p><code>/mnt/etc/nixos/flake.nix</code>:</p>
       <pre><code>{'{'}
-  inputs.nixpkgs.url = <span class="s">"github:NixOS/nixpkgs/nixos-unstable"</span>;
+  inputs.nixpkgs.url = <span class="s">"github:NixOS/nixpkgs/nixos-26.05"</span>;
   inputs.shady.url = <span class="s">"github:gloaming-dusk/shady"</span>;
   inputs.shady.inputs.nixpkgs.follows = <span class="s">"nixpkgs"</span>;
 
