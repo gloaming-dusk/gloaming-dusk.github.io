@@ -1,0 +1,173 @@
+---
+import Base from '../layouts/Base.astro';
+import { formatSize, latestRelease } from '../lib/release';
+import { REPO_URL } from '../lib/site';
+
+const release = await latestRelease();
+const partNames = release?.parts.map((part) => part.name) ?? [];
+const dateFormat = new Intl.DateTimeFormat('en', { dateStyle: 'long', timeZone: 'UTC' });
+---
+<Base title="Download" description="Download the Gloam live ISO: a NixOS-based system that boots straight into the Shady 3D desktop.">
+  <section class="page-head">
+    <div class="wrap">
+      <span class="eyebrow">Download</span>
+      <h1>Get Gloam</h1>
+      <p class="lede">
+        One live ISO for x86_64 PCs. It boots into the full desktop without touching your disks,
+        and doubles as a NixOS installer.
+      </p>
+    </div>
+  </section>
+
+  <section class="wrap release-section">
+    {release ? (
+      <div class="release panel">
+        <div class="release-head">
+          <div>
+            <span class="badge">Latest release</span>
+            <h2>Gloam {release.version}</h2>
+            <p class="muted">
+              Released {dateFormat.format(release.published)} · {formatSize(release.totalSize)} ·
+              <a href={release.url}>Release notes</a>
+            </p>
+          </div>
+        </div>
+        <p>
+          GitHub limits a download to 2 GiB, so the ISO comes in {release.parts.length} parts.
+          Download all of them, then join them into <code>{release.iso}</code>.
+        </p>
+        <ul class="assets">
+          {release.parts.map((part, index) => (
+            <li>
+              <a class="button primary" href={part.url}>Part {index + 1} of {release.parts.length}</a>
+              <span><code>{part.name}</code> · {formatSize(part.size)}</span>
+            </li>
+          ))}
+          {release.checksum && (
+            <li>
+              <a class="button" href={release.checksum.url}>Checksum</a>
+              <span><code>{release.checksum.name}</code> · SHA-256 of the joined ISO</span>
+            </li>
+          )}
+        </ul>
+        <div class="join">
+          <h3>Join and verify</h3>
+          <p class="muted">Linux and macOS, in the folder you downloaded to:</p>
+          <pre><code>cat {partNames.join(' ')} &gt; {release.iso}
+sha256sum -c {release.iso}.sha256     <span class="c"># macOS: shasum -a 256 -c</span></code></pre>
+          <p class="muted">Windows (Command Prompt):</p>
+          <pre><code>copy /b {partNames.join(' + ')} {release.iso}
+certutil -hashfile {release.iso} SHA256</code></pre>
+        </div>
+      </div>
+    ) : (
+      <div class="release panel pending">
+        <span class="badge">Coming soon</span>
+        <h2>The first release is on its way.</h2>
+        <p>
+          Prebuilt ISOs will appear here as soon as the first Gloam release is tagged. Until then you can
+          build the exact same image yourself with Nix:
+        </p>
+        <pre><code>git clone {REPO_URL}
+cd shady
+nix build .#nixosConfigurations.gloam-live.config.system.build.isoImage
+ls result/iso/      <span class="c"># gloam-live-&lt;version&gt;-x86_64-linux.iso</span></code></pre>
+        <p class="muted">
+          Watch the <a href={`${REPO_URL}/releases`}>releases page</a> to hear when it lands.
+        </p>
+      </div>
+    )}
+  </section>
+
+  <section class="wrap steps">
+    <article class="panel step">
+      <h3>Write it to a USB stick</h3>
+      <p>
+        Any tool that writes raw images works: GNOME Disks (“Restore Disk Image”), balenaEtcher, or
+        <code>dd</code>. Everything on the stick is erased.
+      </p>
+      <pre><code>sudo dd if=gloam-live-*.iso of=/dev/sdX bs=4M status=progress oflag=sync</code></pre>
+      <p class="muted">Replace <code>/dev/sdX</code> with the stick itself (check with <code>lsblk</code>), not a partition.</p>
+    </article>
+
+    <article class="panel step">
+      <h3>Or try it in a virtual machine</h3>
+      <p>
+        Gloam renders with your GPU on real hardware and falls back to software rendering in a VM.
+        Give the VM a virtio GPU and a few cores:
+      </p>
+      <pre><code>qemu-system-x86_64 -enable-kvm -m 4096 -smp 4 \
+  -vga none -device virtio-gpu-pci \
+  -cdrom gloam-live-*.iso</code></pre>
+    </article>
+
+    <article class="panel step">
+      <h3>What you need</h3>
+      <ul class="needs">
+        <li>A 64-bit x86 PC with UEFI or BIOS boot</li>
+        <li>4 GB of RAM (8 GB is comfortable)</li>
+        <li>A GPU with open Mesa drivers: Intel and AMD work best; NVIDIA is untested</li>
+        <li>A USB stick of 4 GB or more</li>
+      </ul>
+    </article>
+  </section>
+
+  <section class="wrap note">
+    <p>
+      Gloam is young and experimental. It is great for trying the Shady desktop and for tinkering; keep
+      backups before installing it on a machine you depend on, and
+      <a href={`${REPO_URL}/issues`}>tell us what breaks</a>.
+    </p>
+  </section>
+</Base>
+
+<style>
+  .page-head { padding: clamp(56px, 9vw, 104px) 0 clamp(28px, 4vw, 44px); }
+  .page-head .wrap { display: grid; gap: 16px; }
+  .page-head h1 { font-size: clamp(2.8rem, 7vw, 4.6rem); font-weight: 400; }
+
+  .release-section { margin-bottom: 28px; }
+  .release { display: grid; gap: 20px; padding: clamp(24px, 4vw, 40px); }
+  .release h2 { font-size: clamp(1.8rem, 3.4vw, 2.5rem); margin-top: 10px; }
+  .release > p { color: var(--text-soft); }
+  .muted { color: var(--muted); font-size: 0.94rem; }
+  .muted a { color: var(--amber-soft); }
+  .badge {
+    display: inline-block;
+    padding: 4px 12px;
+    border: 1px solid var(--line-strong);
+    border-radius: 999px;
+    color: var(--amber-soft);
+    font-size: 0.78rem;
+    font-weight: 600;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+  }
+  .assets { display: grid; gap: 12px; margin: 0; padding: 0; list-style: none; }
+  .assets li { display: flex; flex-wrap: wrap; align-items: center; gap: 10px 16px; }
+  .assets span { color: var(--muted); font-size: 0.92rem; overflow-wrap: anywhere; }
+  .join { display: grid; gap: 10px; padding-top: 8px; border-top: 1px solid var(--line); }
+  .join h3 { margin-top: 12px; }
+  .pending { justify-items: start; }
+
+  .steps {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(min(100%, 320px), 1fr));
+    gap: 18px;
+    margin-bottom: 28px;
+  }
+  .step { display: grid; align-content: start; gap: 12px; padding: 26px; box-shadow: none; }
+  .step > p { color: var(--text-soft); font-size: 0.97rem; }
+  .step pre { font-size: 0.8rem; }
+  .needs { display: grid; gap: 8px; margin: 0; padding-left: 1.1rem; color: var(--text-soft); font-size: 0.97rem; }
+
+  .note p {
+    padding: 20px 24px;
+    border: 1px solid var(--line);
+    border-left: 3px solid var(--amber);
+    border-radius: 14px;
+    background: rgba(255, 176, 112, 0.05);
+    color: var(--text-soft);
+  }
+  .note a { color: var(--amber-soft); }
+</style>

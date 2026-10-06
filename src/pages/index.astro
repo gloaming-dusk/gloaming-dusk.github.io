@@ -1,0 +1,338 @@
+---
+import Base from '../layouts/Base.astro';
+
+const hours = [
+  { image: '/media/hour-golden-hour.jpg', name: 'Golden hour', note: 'The sun sits just above the water.' },
+  { image: '/media/hour-afterglow.jpg', name: 'Afterglow', note: 'Rose light after the sun is gone.' },
+  { image: '/media/hour-blue-hour.jpg', name: 'Blue hour', note: 'Cool and quiet, the first stars.' },
+  { image: '/media/hour-night.jpg', name: 'Night', note: 'A dark sea under a full sky.' },
+];
+
+const features = [
+  {
+    title: 'Windows in a 3D world',
+    body: 'Shady places ordinary Wayland apps in a shared perspective space. Fold them into paper, throw them across the sea, or step back into a 3D overview with Super+O.',
+  },
+  {
+    title: 'A sky that keeps time',
+    body: 'Afterglow moves through golden hour, afterglow, blue hour and night (Super+T). The bar, window borders and every accent cross-fade with the light.',
+  },
+  {
+    title: 'A login screen that belongs',
+    body: 'The greeter is Shady too: a frosted card over the same living sea. It remembers who logged in last and which session they chose.',
+  },
+  {
+    title: 'Reproducible, and reversible',
+    body: 'Gloam is NixOS underneath. The whole system comes from one configuration, and any upgrade can be rolled back from the boot menu.',
+  },
+  {
+    title: 'Safe Mode, one keypress away',
+    body: 'Pick Shady (Safe Mode) in the greeter for the same desktop on wlroots’ conventional renderer, and Ctrl+Alt+F2 always reaches a console.',
+  },
+  {
+    title: 'Scriptable to the core',
+    body: 'Configure and script the compositor in Lua, drive it over a JSON IPC socket with shadyctl, or extend it with native C plugins that hot-reload.',
+  },
+];
+---
+<Base overlayNav>
+  <section class="hero" aria-labelledby="hero-title">
+    <img class="hero-sky" src="/media/sky.jpg" alt="" width="1920" height="1080" fetchpriority="high" />
+    <div class="hero-shade"></div>
+    <div class="wrap hero-grid">
+      <div class="hero-content">
+        <span class="eyebrow">NixOS · Wayland · 3D</span>
+        <h1 id="hero-title">Gloam</h1>
+        <p class="hero-tagline">The desktop at <span class="glow-text">dusk</span>.</p>
+        <p class="lede">
+          A NixOS-based distribution where your windows float above a living sunset sea,
+          built around Shady, a 3D Wayland compositor.
+        </p>
+        <div class="actions">
+          <a class="button primary" href="/download/">Download the live ISO</a>
+          <a class="button" href="/get-started/">Get started</a>
+        </div>
+        <p class="hero-meta">x86_64 · boots straight into a live session · free and open source</p>
+      </div>
+      <figure class="hero-screen">
+        <video autoplay muted loop playsinline preload="metadata" poster="/media/hero.jpg" width="1280" height="720"
+          aria-label="The Gloam desktop: glass windows drifting above the Afterglow sea">
+          <source src="/media/hero.webm" type="video/webm" />
+          <source src="/media/hero.mp4" type="video/mp4" />
+        </video>
+      </figure>
+    </div>
+  </section>
+
+  <section class="section flow" aria-labelledby="flow-title">
+    <div class="wrap">
+      <div class="section-head">
+        <span class="eyebrow">One sky, start to finish</span>
+        <h2 id="flow-title">From the login card to the desktop, the light never breaks.</h2>
+        <p class="lede">
+          Gloam greets you with Shady itself. Type your password, the greeter steps aside,
+          and your session opens under the same sky you logged in to.
+        </p>
+      </div>
+      <div class="flow-grid">
+        <figure class="shot panel">
+          <img src="/media/greeter-card.jpg" alt="The Gloam login screen: a clock and a frosted login card over a purple sunset sea" width="560" height="560" loading="lazy" />
+          <figcaption><strong>Log in</strong> The greeter, with the last user and session remembered.</figcaption>
+        </figure>
+        <div class="flow-arrow" aria-hidden="true">→</div>
+        <figure class="shot panel wide">
+          <img src="/media/preview.jpg" alt="The Gloam desktop: translucent windows floating above the Afterglow sunset sea" width="1280" height="720" loading="lazy" />
+          <figcaption><strong>Work</strong> Glass windows above the water, the bar in the colours of the hour.</figcaption>
+        </figure>
+      </div>
+    </div>
+  </section>
+
+  <section class="section features" aria-labelledby="features-title">
+    <div class="wrap">
+      <div class="section-head">
+        <span class="eyebrow">What you get</span>
+        <h2 id="features-title">A calm desktop with a few tricks up its sleeve.</h2>
+      </div>
+      <ul class="feature-grid">
+        {features.map((feature) => (
+          <li class="feature panel">
+            <span class="pip" aria-hidden="true"></span>
+            <h3>{feature.title}</h3>
+            <p>{feature.body}</p>
+          </li>
+        ))}
+      </ul>
+    </div>
+  </section>
+
+  <section class="section hours" aria-labelledby="hours-title">
+    <div class="wrap">
+      <div class="section-head">
+        <span class="eyebrow">Afterglow</span>
+        <h2 id="hours-title">Four hours of light, rendered live.</h2>
+        <p class="lede">
+          The sky and sea are drawn by a native Shady plugin from the camera you are looking through,
+          not a wallpaper. Press Super+T to move to the next hour.
+        </p>
+      </div>
+      <ol class="hour-grid">
+        {hours.map((hour) => (
+          <li class="hour">
+            <img src={hour.image} alt={`The Afterglow desktop at ${hour.name.toLowerCase()}`} width="640" height="360" loading="lazy" />
+            <div><strong>{hour.name}</strong><span>{hour.note}</span></div>
+          </li>
+        ))}
+      </ol>
+    </div>
+  </section>
+
+  <section class="section nixos" aria-labelledby="nixos-title">
+    <div class="wrap nixos-grid">
+      <div class="section-head">
+        <span class="eyebrow">Already on NixOS?</span>
+        <h2 id="nixos-title">Bring the sky to your own system.</h2>
+        <p class="lede">
+          Everything Gloam ships is a NixOS module. Add the flake, enable the session and the greeter,
+          and rebuild.
+        </p>
+        <p><a class="text-link" href="/get-started/#nixos">Full instructions →</a></p>
+      </div>
+      <pre class="panel" aria-label="flake.nix excerpt"><code><span class="c"># flake.nix</span>
+inputs.shady.url = <span class="s">"github:gloaming-dusk/shady"</span>;
+
+<span class="c"># in your NixOS configuration</span>
+imports = [ inputs.shady.nixosModules.default ];
+
+programs.shady.<span class="k">enable</span> = true;
+programs.shady.greeter.<span class="k">enable</span> = true;</code></pre>
+    </div>
+  </section>
+
+  <section class="section shady" aria-labelledby="shady-title">
+    <div class="wrap">
+      <div class="shady-card panel">
+        <img src="/media/neon-transit.jpg" alt="Shady's Neon Transit rice: windows over a glowing neon grid" width="1280" height="720" loading="lazy" />
+        <div class="shady-copy">
+          <span class="eyebrow">Built on Shady</span>
+          <h2 id="shady-title">Gloam is the distribution. Shady is the compositor.</h2>
+          <p>
+            Shady is an experimental 3D Wayland compositor on wlroots, with Lua scripting, a desktop shell,
+            an IPC socket and a C plugin API. Gloam packages it into a system you can boot. Rices like
+            Neon Transit show how differently the same compositor can look.
+          </p>
+          <div class="actions">
+            <a class="button" href="/shady/">Explore Shady</a>
+            <a class="button" href="/shady/docs/">Read the docs</a>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="section closing" aria-labelledby="closing-title">
+    <div class="wrap closing-inner">
+      <h2 id="closing-title">Try it <span class="glow-text">tonight</span>.</h2>
+      <p class="lede">Write the live ISO to a USB stick or boot it in a VM. Nothing is installed until you decide to.</p>
+      <div class="actions">
+        <a class="button primary" href="/download/">Download</a>
+        <a class="button" href="/get-started/">Get started</a>
+      </div>
+    </div>
+  </section>
+</Base>
+
+<style>
+  .hero {
+    position: relative;
+    display: flex;
+    align-items: center;
+    min-height: min(100svh, 940px);
+    padding: 120px 0 clamp(64px, 10vh, 112px);
+    overflow: hidden;
+    isolation: isolate;
+  }
+  .hero-sky {
+    position: absolute;
+    inset: 0;
+    z-index: -2;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    object-position: 70% 55%;
+  }
+  .hero-shade {
+    position: absolute;
+    inset: 0;
+    z-index: -1;
+    background:
+      linear-gradient(90deg, rgba(9, 8, 15, 0.7) 0%, rgba(9, 8, 15, 0.25) 50%, rgba(9, 8, 15, 0) 75%),
+      linear-gradient(0deg, var(--bg) 0%, rgba(9, 8, 15, 0) 32%);
+  }
+  .hero-grid {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) minmax(0, 1.12fr);
+    align-items: center;
+    gap: clamp(32px, 5vw, 72px);
+  }
+  .hero-content { display: grid; gap: 18px; justify-items: start; }
+  .hero-screen {
+    margin: 0;
+    overflow: hidden;
+    border: 1px solid rgba(255, 210, 166, 0.28);
+    border-radius: 16px;
+    background: #120d1a;
+    box-shadow:
+      0 40px 120px rgba(5, 3, 10, 0.65),
+      0 0 0 6px rgba(20, 14, 28, 0.45),
+      0 0 80px rgba(255, 150, 110, 0.18);
+    transform: perspective(1600px) rotateY(-6deg) rotateX(2deg);
+    transform-origin: left center;
+  }
+  .hero-screen video { width: 100%; height: auto; aspect-ratio: 16 / 9; object-fit: cover; }
+  .hero h1 {
+    font-size: clamp(4.5rem, 11vw, 8.5rem);
+    font-weight: 400;
+    line-height: 0.9;
+    letter-spacing: -0.03em;
+    font-variation-settings: "SOFT" 100, "opsz" 144;
+    text-shadow: 0 10px 50px rgba(0, 0, 0, 0.35);
+  }
+  .hero-tagline {
+    font-family: var(--serif);
+    font-size: clamp(1.6rem, 3.6vw, 2.4rem);
+    font-style: italic;
+    font-weight: 300;
+    color: var(--text);
+  }
+  .actions { display: flex; flex-wrap: wrap; gap: 12px; margin-top: 8px; }
+  .hero-meta { color: var(--muted); font-size: 0.88rem; }
+
+  .flow-grid {
+    display: grid;
+    grid-template-columns: minmax(0, 0.85fr) auto minmax(0, 1.5fr);
+    align-items: center;
+    gap: clamp(16px, 2.5vw, 28px);
+  }
+  .shot { margin: 0; overflow: hidden; }
+  .shot img { width: 100%; height: auto; }
+  .shot figcaption {
+    display: grid;
+    gap: 2px;
+    padding: 16px 20px 18px;
+    color: var(--muted);
+    font-size: 0.92rem;
+  }
+  .shot figcaption strong { color: var(--text); font-weight: 600; }
+  .flow-arrow { color: var(--amber); font-size: 2rem; }
+
+  .feature-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(min(100%, 300px), 1fr));
+    gap: 18px;
+    margin: 0;
+    padding: 0;
+    list-style: none;
+  }
+  .feature { display: grid; align-content: start; gap: 10px; padding: 26px; box-shadow: none; }
+  .feature p { color: var(--muted); font-size: 0.97rem; }
+  .pip {
+    width: 9px;
+    height: 9px;
+    border-radius: 50%;
+    background: var(--amber);
+    box-shadow: 0 0 14px var(--amber), 0 0 3px var(--amber-soft);
+  }
+
+  .hour-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(min(100%, 230px), 1fr));
+    gap: 16px;
+    margin: 0;
+    padding: 0;
+    list-style: none;
+  }
+  .hour { overflow: hidden; border: 1px solid var(--line); border-radius: 18px; background: var(--panel-solid); }
+  .hour img { width: 100%; height: auto; aspect-ratio: 16 / 9; object-fit: cover; }
+  .hour div { display: grid; gap: 2px; padding: 14px 16px 16px; }
+  .hour strong { font-family: var(--serif); font-size: 1.15rem; font-weight: 500; }
+  .hour span { color: var(--muted); font-size: 0.9rem; }
+
+  .nixos-grid {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) minmax(0, 1.05fr);
+    align-items: center;
+    gap: clamp(28px, 5vw, 64px);
+  }
+  .nixos-grid .section-head { margin-bottom: 0; }
+  .nixos pre { font-size: 0.95rem; box-shadow: var(--shadow); }
+  .text-link { color: var(--amber-soft); font-weight: 600; text-decoration: none; }
+
+  .shady-card {
+    display: grid;
+    grid-template-columns: minmax(0, 1.1fr) minmax(0, 1fr);
+    overflow: hidden;
+  }
+  .shady-card img { width: 100%; height: 100%; object-fit: cover; min-height: 280px; }
+  .shady-copy { display: grid; align-content: center; gap: 16px; padding: clamp(28px, 4vw, 48px); }
+  .shady-copy h2 { font-size: clamp(1.7rem, 3vw, 2.4rem); }
+  .shady-copy p { color: var(--text-soft); }
+
+  .closing-inner { display: grid; justify-items: center; gap: 16px; text-align: center; }
+  .closing h2 { font-size: clamp(2.4rem, 6vw, 4.2rem); }
+
+  @media (max-width: 960px) {
+    .hero-grid { grid-template-columns: 1fr; }
+    .hero-screen { transform: none; }
+    /* Stacked, the copy runs down over the bright horizon: dim it more. */
+    .hero-shade {
+      background:
+        linear-gradient(180deg, rgba(9, 8, 15, 0.55) 0%, rgba(9, 8, 15, 0.5) 60%, var(--bg) 100%);
+    }
+  }
+  @media (max-width: 860px) {
+    .flow-grid { grid-template-columns: 1fr; }
+    .flow-arrow { justify-self: center; transform: rotate(90deg); }
+    .nixos-grid, .shady-card { grid-template-columns: 1fr; }
+  }
+</style>

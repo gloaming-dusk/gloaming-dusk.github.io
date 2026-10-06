@@ -1,0 +1,20 @@
+---
+import Base from '../layouts/Base.astro';
+---
+<Base title="Lost in the dark">
+  <section class="wrap lost">
+    <span class="eyebrow">404</span>
+    <h1>The sun has set on this page.</h1>
+    <p class="lede">It may have moved, or never existed. The rest of Gloam is still here.</p>
+    <div class="actions">
+      <a class="button primary" href="/">Back to Gloam</a>
+      <a class="button" href="/shady/">Shady docs</a>
+    </div>
+  </section>
+</Base>
+
+<style>
+  .lost { display: grid; justify-items: start; gap: 18px; padding-top: clamp(80px, 14vw, 160px); padding-bottom: clamp(80px, 14vw, 160px); }
+  .lost h1 { font-size: clamp(2.4rem, 6vw, 4rem); font-weight: 400; }
+  .actions { display: flex; flex-wrap: wrap; gap: 12px; }
+</style>

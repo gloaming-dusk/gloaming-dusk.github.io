@@ -1,0 +1,211 @@
+---
+import '../styles/global.css';
+import { REPO_URL as repo } from '../lib/site';
+
+interface Props {
+  title?: string;
+  description?: string;
+  /** Let the page's hero sit under a transparent navigation bar. */
+  overlayNav?: boolean;
+}
+
+const {
+  title,
+  description = 'Gloam is a NixOS-based Linux distribution built around Shady, a 3D Wayland compositor: windows float above a living sunset sea.',
+  overlayNav = false,
+} = Astro.props;
+
+const pageTitle = title ? `${title} · Gloam` : 'Gloam — the desktop at dusk';
+const site = Astro.site ?? new URL('https://gloaming-dusk.github.io');
+const canonical = new URL(Astro.url.pathname, site);
+const card = new URL('/media/preview.jpg', site);
+const path = Astro.url.pathname.replace(/\/$/, '') || '/';
+
+const nav = [
+  { href: '/download/', label: 'Download' },
+  { href: '/get-started/', label: 'Get started' },
+  { href: '/shady/', label: 'Shady', external: true },
+  { href: repo, label: 'GitHub', external: true },
+];
+---
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>{pageTitle}</title>
+    <meta name="description" content={description} />
+    <link rel="canonical" href={canonical} />
+    <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
+    <meta name="theme-color" content="#09080f" />
+    <meta property="og:type" content="website" />
+    <meta property="og:site_name" content="Gloam" />
+    <meta property="og:title" content={pageTitle} />
+    <meta property="og:description" content={description} />
+    <meta property="og:url" content={canonical} />
+    <meta property="og:image" content={card} />
+    <meta name="twitter:card" content="summary_large_image" />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      rel="stylesheet"
+      href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght,SOFT@9..144,300..600,0..100&family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@400;500&display=swap"
+    />
+  </head>
+  <body>
+    <a class="skip" href="#main">Skip to content</a>
+    <header class:list={['site-nav', { overlay: overlayNav }]}>
+      <div class="wrap nav-inner">
+        <a class="brand" href="/" aria-label="Gloam home">
+          <img src="/favicon.svg" alt="" width="28" height="28" />
+          <span>Gloam</span>
+        </a>
+        <nav aria-label="Main">
+          <ul>
+            {nav.map((item) => (
+              <li>
+                <a
+                  href={item.href}
+                  aria-current={!item.external && path === item.href.replace(/\/$/, '') ? 'page' : undefined}
+                >
+                  {item.label}{item.external && <span class="ext" aria-hidden="true">↗</span>}
+                </a>
+              </li>
+            ))}
+          </ul>
+        </nav>
+      </div>
+    </header>
+
+    <main id="main">
+      <slot />
+    </main>
+
+    <footer class="site-footer">
+      <div class="wrap footer-inner">
+        <div class="footer-brand">
+          <a class="brand" href="/"><img src="/favicon.svg" alt="" width="24" height="24" /><span>Gloam</span></a>
+          <p>A NixOS distribution for the hour after sunset, built around the <a href="/shady/">Shady</a> compositor.</p>
+        </div>
+        <ul class="footer-links">
+          <li><a href="/download/">Download</a></li>
+          <li><a href="/get-started/">Get started</a></li>
+          <li><a href="/shady/docs/">Shady docs</a></li>
+          <li><a href={repo}>Source</a></li>
+          <li><a href={`${repo}/issues`}>Report an issue</a></li>
+        </ul>
+      </div>
+      <div class="wrap footer-base">
+        <span>© Gloaming Dusk contributors · Apache-2.0</span>
+        <span>Gloam is not affiliated with the NixOS Foundation.</span>
+      </div>
+    </footer>
+  </body>
+</html>
+
+<style>
+  .skip {
+    position: absolute;
+    left: -999px;
+    top: 8px;
+    z-index: 100;
+    padding: 8px 14px;
+    border-radius: 10px;
+    background: var(--panel-solid);
+  }
+  .skip:focus { left: 8px; }
+
+  .site-nav {
+    position: sticky;
+    top: 0;
+    z-index: 50;
+    border-bottom: 1px solid var(--line);
+    background: rgba(9, 8, 15, 0.72);
+    backdrop-filter: blur(16px);
+  }
+  .site-nav.overlay {
+    position: absolute;
+    left: 0;
+    right: 0;
+    border-bottom: 0;
+    background: linear-gradient(rgba(9, 8, 15, 0.55), transparent);
+    backdrop-filter: none;
+  }
+  .nav-inner {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 16px;
+    min-height: 68px;
+  }
+  .brand {
+    display: inline-flex;
+    align-items: center;
+    gap: 10px;
+    text-decoration: none;
+    font-family: var(--serif);
+    font-size: 1.35rem;
+    font-weight: 500;
+    letter-spacing: 0.01em;
+  }
+  .brand img { border-radius: 8px; }
+  nav ul {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: flex-end;
+    gap: 4px 22px;
+    margin: 0;
+    padding: 0;
+    list-style: none;
+  }
+  nav a {
+    color: var(--text-soft);
+    font-size: 0.94rem;
+    font-weight: 500;
+    text-decoration: none;
+  }
+  nav a[aria-current='page'] { color: var(--amber-soft); }
+  .ext { margin-left: 3px; font-size: 0.8em; color: var(--faint); }
+
+  .site-footer {
+    margin-top: 40px;
+    border-top: 1px solid var(--line);
+    background: rgba(8, 6, 12, 0.6);
+  }
+  .footer-inner {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-between;
+    gap: 28px;
+    padding-top: 44px;
+    padding-bottom: 28px;
+  }
+  .footer-brand { display: grid; gap: 12px; max-width: 26rem; }
+  .footer-brand p { color: var(--muted); font-size: 0.94rem; }
+  .footer-links {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, auto));
+    gap: 8px 40px;
+    margin: 0;
+    padding: 0;
+    list-style: none;
+    font-size: 0.94rem;
+  }
+  .footer-links a { color: var(--text-soft); text-decoration: none; }
+  .footer-base {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-between;
+    gap: 8px 24px;
+    padding-top: 18px;
+    padding-bottom: 32px;
+    border-top: 1px solid var(--line);
+    color: var(--faint);
+    font-size: 0.84rem;
+  }
+
+  @media (max-width: 640px) {
+    .nav-inner { flex-direction: column; align-items: flex-start; gap: 6px; padding-top: 12px; padding-bottom: 12px; }
+    nav ul { justify-content: flex-start; gap: 4px 16px; }
+  }
+</style>

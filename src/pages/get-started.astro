@@ -1,0 +1,186 @@
+---
+import Base from '../layouts/Base.astro';
+import { REPO_URL } from '../lib/site';
+
+const keys = [
+  ['Super + Return', 'Open a terminal (foot)'],
+  ['Super + D', 'Open the application launcher'],
+  ['Super + 1 / 2 / 3', 'Switch to the shore, studio or harbor workspace'],
+  ['Super + Shift + 1 / 2 / 3', 'Move the focused window to that workspace'],
+  ['Super + Tab', 'Focus the next window'],
+  ['Super + Q', 'Close the focused window'],
+  ['Super + M  /  Super + Shift + M', 'Maximize / fullscreen'],
+  ['Super + O', '3D overview of every window'],
+  ['Super + T  /  Super + Shift + T', 'Next / previous hour of light'],
+  ['Super + F', 'First-person mode: walk among your windows'],
+  ['Super + Space  /  Super + Shift + Space', 'Unfold / fold every window'],
+  ['Super + Shift + Escape', 'Log out'],
+  ['Ctrl + Alt + F2', 'Switch to a text console (F1 back)'],
+];
+---
+<Base title="Get started" description="Boot the Gloam live session, find your way around the Shady desktop, and install Gloam on NixOS.">
+  <section class="page-head">
+    <div class="wrap">
+      <span class="eyebrow">Get started</span>
+      <h1>Your first evening with Gloam</h1>
+      <p class="lede">Boot the live session, learn a handful of keys, and install it when you are ready.</p>
+      <nav class="toc" aria-label="On this page">
+        <a href="#live">1 · The live session</a>
+        <a href="#keys">2 · Getting around</a>
+        <a href="#greeter">3 · Logging in and out</a>
+        <a href="#install">4 · Installing</a>
+        <a href="#nixos">5 · On an existing NixOS</a>
+      </nav>
+    </div>
+  </section>
+
+  <div class="wrap doc">
+    <section id="live">
+      <h2>1 · The live session</h2>
+      <p>
+        <a href="/download/">Download</a> the ISO, write it to a USB stick and boot from it. Pick
+        <strong>Gloam … Live</strong> in the boot menu (it starts on its own after a few seconds).
+        Gloam logs the <code>nixos</code> user straight into Shady with the Afterglow sky; nothing on
+        your disks is touched.
+      </p>
+      <ul>
+        <li>Network: open a terminal and run <code>nmtui</code> to join Wi-Fi.</li>
+        <li>Sound: <code>pavucontrol</code> picks outputs and volume.</li>
+        <li>Firefox is installed; launch it from the launcher (Super + D).</li>
+      </ul>
+      <p class="aside">
+        In a VM without a GPU, Gloam renders on the CPU. It works, but the sea moves less smoothly than on real hardware.
+      </p>
+    </section>
+
+    <section id="keys">
+      <h2>2 · Getting around</h2>
+      <p>Super is the Windows / Command key. The bar at the top shows workspaces, windows and the clock.</p>
+      <div class="keys panel">
+        <table>
+          <thead><tr><th scope="col">Keys</th><th scope="col">Does</th></tr></thead>
+          <tbody>
+            {keys.map(([combo, action]) => (
+              <tr><td><kbd>{combo}</kbd></td><td>{action}</td></tr>
+            ))}
+          </tbody>
+        </table>
+      </div>
+    </section>
+
+    <section id="greeter">
+      <h2>3 · Logging in and out</h2>
+      <p>
+        After you log out, the Gloam greeter appears over the same sea. In the live session the
+        <code>nixos</code> user has no password: press <strong>Enter</strong>. Up and Down choose the
+        user, Tab the session:
+      </p>
+      <ul>
+        <li><strong>Shady</strong>: the full 3D desktop.</li>
+        <li><strong>Shady (Safe Mode)</strong>: the same desktop on wlroots’ conventional renderer, for when 3D misbehaves.</li>
+      </ul>
+      <p>Logs live in the journal: <code>journalctl -t shady</code> for the session, <code>-t shady-greeter</code> for the greeter.</p>
+    </section>
+
+    <section id="install">
+      <h2>4 · Installing</h2>
+      <p>
+        A graphical installer is planned. Today, Gloam installs the NixOS way from the live session’s
+        terminal. Partition and mount your disk under <code>/mnt</code> as described in the
+        <a href="https://nixos.org/manual/nixos/stable/#sec-installation-manual">NixOS manual</a>, then:
+      </p>
+      <pre><code>sudo nixos-generate-config --root /mnt
+sudo nano /mnt/etc/nixos/flake.nix      <span class="c"># paste the flake below</span>
+sudo nixos-install --flake /mnt/etc/nixos#gloam
+sudo reboot</code></pre>
+      <p><code>/mnt/etc/nixos/flake.nix</code>:</p>
+      <pre><code>{'{'}
+  inputs.nixpkgs.url = <span class="s">"github:NixOS/nixpkgs/nixos-unstable"</span>;
+  inputs.shady.url = <span class="s">"github:gloaming-dusk/shady"</span>;
+  inputs.shady.inputs.nixpkgs.follows = <span class="s">"nixpkgs"</span>;
+
+  outputs = {'{'} nixpkgs, shady, ... {'}'}: {'{'}
+    nixosConfigurations.gloam = nixpkgs.lib.nixosSystem {'{'}
+      system = <span class="s">"x86_64-linux"</span>;
+      modules = [
+        ./configuration.nix
+        shady.nixosModules.default
+        {'{'}
+          programs.shady.<span class="k">enable</span> = true;
+          programs.shady.greeter.<span class="k">enable</span> = true;
+          networking.networkmanager.<span class="k">enable</span> = true;
+          nix.settings.experimental-features = [ <span class="s">"nix-command"</span> <span class="s">"flakes"</span> ];
+          users.users.you = {'{'}
+            isNormalUser = true;
+            extraGroups = [ <span class="s">"wheel"</span> <span class="s">"networkmanager"</span> ];
+          {'}'};
+        {'}'}
+      ];
+    {'}'};
+  {'}'};
+{'}'}</code></pre>
+      <p>
+        Replace <code>you</code> with your user name and set its password with
+        <code>sudo nixos-enter --root /mnt -c 'passwd you'</code> before rebooting. After the reboot the Gloam
+        greeter asks for it. Upgrades are <code>nix flake update</code> and
+        <code>sudo nixos-rebuild switch --flake /etc/nixos#gloam</code>; if one goes wrong, pick the previous
+        generation in the boot menu.
+      </p>
+    </section>
+
+    <section id="nixos">
+      <h2>5 · On an existing NixOS</h2>
+      <p>
+        Already running NixOS with flakes? Add the <code>shady</code> input and the module to your system,
+        exactly as in the <code>modules</code> list above, and run <code>nixos-rebuild switch</code>. The
+        Shady and Shady (Safe Mode) sessions appear in your display manager; with
+        <code>programs.shady.greeter.enable</code> the Gloam greeter replaces it.
+      </p>
+      <p>
+        Everything the module does is in <a href={`${REPO_URL}/blob/main/nix/module.nix`}><code>nix/module.nix</code></a>;
+        the Shady documentation covers <a href="/shady/docs/">configuration, rices and plugins</a>.
+      </p>
+    </section>
+  </div>
+</Base>
+
+<style>
+  .page-head { padding: clamp(56px, 9vw, 104px) 0 clamp(24px, 4vw, 40px); }
+  .page-head .wrap { display: grid; gap: 16px; }
+  .page-head h1 { font-size: clamp(2.6rem, 6.4vw, 4.4rem); font-weight: 400; }
+  .toc { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 8px; }
+  .toc a {
+    padding: 6px 14px;
+    border: 1px solid var(--line);
+    border-radius: 999px;
+    color: var(--text-soft);
+    font-size: 0.88rem;
+    text-decoration: none;
+  }
+
+  .doc { display: grid; gap: clamp(48px, 7vw, 80px); max-width: 860px; padding-bottom: 40px; }
+  .doc section { display: grid; gap: 16px; scroll-margin-top: 90px; }
+  .doc h2 { font-size: clamp(1.7rem, 3.4vw, 2.3rem); }
+  .doc p, .doc li { color: var(--text-soft); }
+  .doc ul { display: grid; gap: 6px; margin: 0; padding-left: 1.2rem; }
+  .doc a { color: var(--amber-soft); }
+  .doc pre { font-size: 0.84rem; }
+  .aside { padding-left: 14px; border-left: 2px solid var(--line-strong); color: var(--muted) !important; font-size: 0.94rem; }
+
+  .keys { overflow-x: auto; box-shadow: none; }
+  table { width: 100%; border-collapse: collapse; font-size: 0.95rem; }
+  th, td { padding: 11px 18px; text-align: left; border-bottom: 1px solid var(--line); vertical-align: top; }
+  th { color: var(--muted); font-weight: 500; font-size: 0.82rem; letter-spacing: 0.06em; text-transform: uppercase; }
+  tr:last-child td { border-bottom: 0; }
+  td:first-child { white-space: nowrap; }
+  kbd {
+    padding: 2px 8px;
+    border: 1px solid var(--line-strong);
+    border-radius: 7px;
+    background: rgba(255, 220, 196, 0.06);
+    color: var(--amber-soft);
+    font-family: var(--mono);
+    font-size: 0.84rem;
+  }
+  @media (max-width: 560px) { td:first-child { white-space: normal; } }
+</style>
