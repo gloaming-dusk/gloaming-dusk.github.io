@@ -2,8 +2,11 @@
 
 The website of [Gloam](https://gloaming-dusk.github.io/), the NixOS-based
 distribution built around the [Shady](https://github.com/gloaming-dusk/shady)
-3D Wayland compositor. Shady's own documentation site lives in the Shady
-repository and is served at `/shady/`.
+3D Wayland compositor. The ISO is built from
+[gloaming-dusk/gloam](https://github.com/gloaming-dusk/gloam). Shady's own
+documentation site lives in
+[gloaming-dusk/shady-website](https://github.com/gloaming-dusk/shady-website)
+and is served at `/shady/`.
 
 ```sh
 npm ci
@@ -13,7 +16,8 @@ npm run build    # static output in dist/
 ```
 
 The download page reads the latest `gloam-v*` release of
-`gloaming-dusk/shady` from the GitHub API at build time (set `GITHUB_TOKEN`
+`gloaming-dusk/gloam` (or, for releases up to 0.2.1, `gloaming-dusk/shady`)
+from the GitHub API at build time (set `GITHUB_TOKEN`
 to avoid rate limits). Without network access, or before the first release,
 it shows how to build the ISO instead. The Pages workflow rebuilds the site
 every six hours, so new releases appear without a deploy.

@@ -1,11 +1,12 @@
 /*
  * The latest Gloam release, read from GitHub when the site is built.
- * Releases are tagged gloam-v<version> on gloaming-dusk/shady. GitHub caps
+ * Releases are tagged gloam-v<version> on gloaming-dusk/gloam (earlier ones
+ * on gloaming-dusk/shady; the newest of either wins). GitHub caps
  * an asset at 2 GiB, so the ISO is attached in parts (<iso>.part0, .part1,
  * ...) next to <iso>.sha256 for the joined image. The site rebuilds on a
  * schedule, so a new release shows up without a deploy.
  */
-import { REPO } from './site';
+import { RELEASE_REPOS } from './site';
 
 export interface ReleaseAsset {
   name: string;
@@ -55,17 +56,24 @@ export async function latestRelease(): Promise<GloamRelease | null> {
   const token = process.env.GITHUB_TOKEN;
   if (token) headers.Authorization = `Bearer ${token}`;
 
-  try {
-    const response = await fetch(`https://api.github.com/repos/${REPO}/releases?per_page=30`, { headers });
-    if (!response.ok) {
-      console.warn(`release: GitHub answered ${response.status}; building without a release`);
-      return null;
+  const releases: GitHubRelease[] = [];
+  for (const repo of RELEASE_REPOS) {
+    try {
+      const response = await fetch(`https://api.github.com/repos/${repo}/releases?per_page=30`, { headers });
+      if (!response.ok) {
+        console.warn(`release: GitHub answered ${response.status} for ${repo}`);
+        continue;
+      }
+      releases.push(...((await response.json()) as GitHubRelease[]));
+    } catch (error) {
+      console.warn(`release: ${String(error)} for ${repo}`);
     }
-    return pick((await response.json()) as GitHubRelease[]);
-  } catch (error) {
-    console.warn(`release: ${String(error)}; building without a release`);
-    return null;
   }
+  if (releases.length === 0) console.warn('release: no releases read; building without a release');
+  // Drafts have no publish date; pick() skips them.
+  const published = (r: GitHubRelease) => Date.parse(r.published_at) || 0;
+  releases.sort((a, b) => published(b) - published(a));
+  return pick(releases);
 }
 
 function pick(releases: GitHubRelease[]): GloamRelease | null {

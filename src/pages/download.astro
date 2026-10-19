@@ -1,7 +1,7 @@
 ---
 import Base from '../layouts/Base.astro';
 import { formatSize, latestRelease } from '../lib/release';
-import { REPO_URL } from '../lib/site';
+import { GLOAM_REPO_URL, REPO_URL } from '../lib/site';
 
 const release = await latestRelease();
 const partNames = release?.parts.map((part) => part.name) ?? [];
@@ -68,12 +68,12 @@ certutil -hashfile {release.iso} SHA256</code></pre>
           Prebuilt ISOs will appear here as soon as the first Gloam release is tagged. Until then you can
           build the exact same image yourself with Nix:
         </p>
-        <pre><code>git clone {REPO_URL}
-cd shady
+        <pre><code>git clone {GLOAM_REPO_URL}
+cd gloam
 nix build .#nixosConfigurations.gloam-live.config.system.build.isoImage
 ls result/iso/      <span class="c"># gloam-live-&lt;version&gt;-x86_64-linux.iso</span></code></pre>
         <p class="muted">
-          Watch the <a href={`${REPO_URL}/releases`}>releases page</a> to hear when it lands.
+          Watch the <a href={`${GLOAM_REPO_URL}/releases`}>releases page</a> to hear when it lands.
         </p>
       </div>
     )}
