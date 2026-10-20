@@ -22,5 +22,7 @@ to avoid rate limits). Without network access, or before the first release,
 it shows how to build the ISO instead. The Pages workflow rebuilds the site
 every six hours, so new releases appear without a deploy.
 
-Media in `public/media/` comes from Shady's Afterglow and Neon Transit rices
-and from the Gloam greeter VM test.
+Media in `public/media/` comes from Shady's rices and the Gloam greeter VM
+test: the hero loop, the hours and `preview.jpg` from Horizon, Gloam's desktop
+(`rices/horizon/capture.sh`), `sky.jpg` from Afterglow and `neon-transit.jpg`
+from Neon Transit.

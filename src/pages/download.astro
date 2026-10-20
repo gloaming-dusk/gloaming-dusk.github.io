@@ -1,7 +1,7 @@
 ---
 import Base from '../layouts/Base.astro';
 import { formatSize, latestRelease } from '../lib/release';
-import { GLOAM_REPO_URL, REPO_URL } from '../lib/site';
+import { GLOAM_REPO_URL } from '../lib/site';
 
 const release = await latestRelease();
 const partNames = release?.parts.map((part) => part.name) ?? [];
@@ -116,7 +116,7 @@ ls result/iso/      <span class="c"># gloam-live-&lt;version&gt;-x86_64-linux.is
     <p>
       Gloam is young and experimental. It is great for trying the Shady desktop and for tinkering; keep
       backups before installing it on a machine you depend on, and
-      <a href={`${REPO_URL}/issues`}>tell us what breaks</a>.
+      <a href={`${GLOAM_REPO_URL}/issues`}>tell us what breaks</a>.
     </p>
   </section>
 </Base>
