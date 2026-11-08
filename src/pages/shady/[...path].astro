@@ -1,0 +1,29 @@
+---
+// The site used to live under /shady/. Old links land on the same page here.
+import { getCollection } from 'astro:content';
+import { docSlug } from '../../lib/docs';
+
+export async function getStaticPaths() {
+  const docs = await getCollection('docs');
+  const pages = [
+    undefined,
+    'getting-started',
+    'plugins',
+    'docs',
+    'demo/tide',
+    'demo/horizon',
+    'demo/afterglow',
+    ...docs.map((doc) => `docs/${docSlug(doc.id)}`)
+  ];
+  return pages.map((path) => ({ params: { path } }));
+}
+
+const { path } = Astro.params;
+const target = path ? `/${path}/` : '/';
+---
+<!doctype html>
+<meta charset="utf-8" />
+<title>Moved</title>
+<link rel="canonical" href={target} />
+<meta http-equiv="refresh" content={`0; url=${target}`} />
+<p>This page moved to <a href={target}>{target}</a>.</p>

@@ -52,8 +52,8 @@ const shortcuts: Array<[string[], string]> = [
 ];
 ---
 <BaseLayout
-  title="Tide · Shady"
-  description="Tide, Shady's default desktop: niri's scrolling columns and keys under a glass shell with a minimap of the strip, a control center, launcher, lock screen and greeter."
+  title="Tide · Gloam"
+  description="Tide, Gloam's desktop shell: niri's scrolling columns and keys under a glass shell with a minimap of the strip, a control center, launcher, lock screen and greeter."
   path="/demo/tide/"
 >
   <header class="page-hero">
@@ -120,10 +120,7 @@ const shortcuts: Array<[string[], string]> = [
 WLR_BACKENDS=wayland ./build/shady
 
 # NixOS
-programs.shady = {'{'}
-  enable = true;
-  greeter.enable = true;
-{'}'};</code></pre>
+programs.gloam.enable = true;</code></pre>
           </div>
         </div>
       </section>

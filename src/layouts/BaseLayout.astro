@@ -9,8 +9,8 @@ interface Props {
 }
 
 const {
-  title = 'Shady — a desktop you can live in, and take apart',
-  description = 'Shady is a Wayland desktop built on wlroots: Tide, an everyday desktop with scrolling columns, on a 3D compositor you can extend in Lua and C or take apart completely.',
+  title = 'Gloam — a desktop you can live in, and take apart',
+  description = 'Gloam is a Wayland desktop: scrolling columns under a quiet glass shell, on the Shady 3D compositor you can extend in Lua and C or take apart completely.',
   path = Astro.url.pathname
 } = Astro.props;
 
@@ -32,7 +32,7 @@ const favicon =
   "<stop offset='0' stop-color='%23d6cbff'/><stop offset='.45' stop-color='%23b4a0ff'/>" +
   "<stop offset='1' stop-color='%237cb7ff'/></linearGradient></defs>" +
   "<rect width='64' height='64' rx='18' fill='url(%23g)'/>" +
-  "<text x='32' y='44' text-anchor='middle' font-family='monospace' font-weight='800' font-size='34' fill='%2311111b'>S</text></svg>";
+  "<text x='32' y='44' text-anchor='middle' font-family='monospace' font-weight='800' font-size='34' fill='%2311111b'>G</text></svg>";
 ---
 <!doctype html>
 <html lang="en">
@@ -44,7 +44,7 @@ const favicon =
     <link rel="icon" href={favicon} />
     {canonical && <link rel="canonical" href={canonical} />}
     <meta property="og:type" content="website" />
-    <meta property="og:site_name" content="Shady" />
+    <meta property="og:site_name" content="Gloam" />
     <meta property="og:title" content={title} />
     <meta property="og:description" content={description} />
     {canonical && <meta property="og:url" content={canonical} />}
@@ -61,9 +61,9 @@ const favicon =
     <a class="skip-link" href="#content">Skip to content</a>
     <header class="site-header">
       <div class="shell nav">
-        <a class="brand" href="/" aria-label="Shady home">
-          <span class="brand-mark">S</span>
-          <span>Shady</span>
+        <a class="brand" href="/" aria-label="Gloam home">
+          <span class="brand-mark">G</span>
+          <span>Gloam</span>
         </a>
         <nav class="nav-links" aria-label="Primary navigation">
           <a href="/getting-started/" aria-current={is('/getting-started') ? 'page' : undefined}>Getting started</a>
@@ -85,10 +85,10 @@ const favicon =
       <div class="shell footer-inner">
         <div>
           <a class="brand" href="/">
-            <span class="brand-mark">S</span>
-            <span>Shady</span>
+            <span class="brand-mark">G</span>
+            <span>Gloam</span>
           </a>
-          <p>An everyday Wayland desktop on an experimental 3D compositor. Grown from TinyWL, built on wlroots.</p>
+          <p>An everyday Wayland desktop on Shady, an experimental 3D compositor built on wlroots.</p>
         </div>
         <div class="footer-col">
           <h4>Start</h4>
@@ -114,7 +114,8 @@ const favicon =
         <div class="footer-col">
           <h4>Project</h4>
           <ul>
-            <li><a href={repo}>Source</a></li>
+            <li><a href="https://github.com/gloaming-dusk/gloam">Gloam</a></li>
+            <li><a href={repo}>Shady</a></li>
             <li><a href={`${repo}/issues`}>Issues</a></li>
             <li><a href={`${repo}/blob/main/LICENSE`}>License</a></li>
           </ul>

@@ -1,4 +1,4 @@
-# Shady website
+# Gloam website
 
 The project website is a static [Astro](https://astro.build/) site.
 
@@ -29,12 +29,11 @@ The static output is written to `dist/`.
 
 ## Deployment
 
-The site is served at <https://gloaming-dusk.github.io/shady/>, so it deploys
-from the Shady repository: its `pages.yml` workflow checks out this repository
-and Shady, builds, and publishes. It runs when Shady's docs or rice previews
-change, daily, and by hand (`gh workflow run pages.yml -R gloaming-dusk/shady`)
-to publish a change here right away. This repository's `check.yml` only
-checks that the site builds.
+The site is served at <https://gloaming-dusk.github.io/> and deploys from this
+repository (`.github/workflows/deploy.yml`) on every push to `main`. It builds
+against Shady's `main` branch, so a change to Shady's docs appears on the daily
+run, or right away with `gh workflow run deploy.yml`. Pull requests are checked
+but not deployed.
 
 ## Content
 

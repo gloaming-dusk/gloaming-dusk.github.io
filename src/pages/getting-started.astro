@@ -2,25 +2,22 @@
 import BaseLayout from '../layouts/BaseLayout.astro';
 
 const flakeSnippet = `{
-  inputs.shady.url = "github:gloaming-dusk/shady";
+  inputs.gloam.url = "github:gloaming-dusk/gloam";
 
-  outputs = { nixpkgs, shady, ... }: {
+  outputs = { nixpkgs, gloam, ... }: {
     nixosConfigurations.my-machine = nixpkgs.lib.nixosSystem {
       system = "x86_64-linux";
       modules = [
         ./configuration.nix
-        shady.nixosModules.default
-        {
-          programs.shady.enable = true;
-          programs.shady.greeter.enable = true;
-        }
+        gloam.nixosModules.default
+        { programs.gloam.enable = true; }
       ];
     };
   };
 }`;
 ---
 <BaseLayout
-  title="Getting started · Shady"
+  title="Getting started · Gloam"
   description="Build and run Shady and shady-shell nested, in safe mode, from a Linux VT, or as a NixOS login session."
   path="/getting-started/"
 >
@@ -127,11 +124,11 @@ WLR_BACKENDS=wayland ./build/shady</code></pre>
       <div class="shell two-col">
         <div>
           <p class="eyebrow">NixOS</p>
-          <h2>Install it as a login session.</h2>
+          <h2>Install the whole desktop.</h2>
           <p class="lede">
-            The flake's NixOS module adds a Shady session to any NixOS system:
-            the compositor, shady-shell, the rices and, if you like, the Shady
-            greeter for greetd.
+            <code>programs.gloam.enable</code> adds the session and its login screen, the
+            services the shell talks to and a set of applications. Shady's own module
+            is there too, for just the compositor and shell.
           </p>
           <p>The session and the greeter are Tide's unless you say otherwise: <code>programs.shady.rice</code> picks another rice for whatever you have not configured in <code>~/.config/shady/</code>, and <code>programs.shady.greeter.theme</code> the login screen. See the <a href="/docs/greeter/">greeter docs</a>.</p>
         </div>
