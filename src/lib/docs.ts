@@ -1,5 +1,6 @@
 export const docOrder = [
   'GETTING_STARTED',
+  'CUSTOMIZING',
   'API',
   'LUA_API',
   'HEADLESS_API',
@@ -19,6 +20,7 @@ export const docOrder = [
 
 export const docLabels: Record<string, string> = {
   GETTING_STARTED: 'Getting started',
+  CUSTOMIZING: 'Customizing',
   API: 'API overview',
   LUA_API: 'Lua API',
   HEADLESS_API: 'Headless API',

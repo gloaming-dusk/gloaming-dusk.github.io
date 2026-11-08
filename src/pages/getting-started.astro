@@ -1,6 +1,5 @@
 ---
 import BaseLayout from '../layouts/BaseLayout.astro';
-import { tide } from '../lib/tide';
 
 const flakeSnippet = `{
   inputs.shady.url = "github:gloaming-dusk/shady";
@@ -13,7 +12,6 @@ const flakeSnippet = `{
         shady.nixosModules.default
         {
           programs.shady.enable = true;
-          programs.shady.rice = "horizon";
           programs.shady.greeter.enable = true;
         }
       ];
@@ -46,16 +44,16 @@ const flakeSnippet = `{
           <p class="eyebrow">One command</p>
           <h2>Try it in a window.</h2>
           <p class="lede">
-            From any Wayland desktop with Nix, this builds Shady and opens Horizon
-            inside a window, with a terminal. Press <code>Super+Shift+/</code> to see
+            From any Wayland desktop with Nix, this builds Shady and opens Tide, the
+            default desktop, inside a window, with a terminal. Press <code>Super+Shift+/</code> to see
             every shortcut of the session.
           </p>
-          <p><code>SHADY_RICE=objects</code> in front picks another rice. Run from a text console, it starts full screen.</p>
+          <p><code>SHADY_RICE=horizon</code> in front picks another rice. Run from a text console, it starts full screen.</p>
         </div>
         <div class="code-window">
           <div class="code-title">nix run</div>
           <pre><code>nix run github:gloaming-dusk/shady
-SHADY_RICE=objects nix run github:gloaming-dusk/shady</code></pre>
+SHADY_RICE=horizon nix run github:gloaming-dusk/shady</code></pre>
         </div>
       </div>
     </section>
@@ -93,8 +91,8 @@ SHADY_RICE=objects nix run github:gloaming-dusk/shady</code></pre>
         </article>
         <article class="step">
           <div>
-            <h3>Pick a rice</h3>
-            <p>A rice starts the compositor with <code>shady-shell</code> and a terminal. Start with <a href="/demo/horizon/">Horizon</a>, the default (<code>./rices/horizon/run.sh</code>), then try Objects, <a href="/demo/afterglow/">Afterglow</a> or Neon Transit, or read one as a template for your own config.{tide && <> To live in, <a href="/demo/tide/">Tide</a> tiles windows in scrolling columns with niri's keys (<code>./rices/tide/run.sh</code>).</>}</p>
+            <h3>Make it yours</h3>
+            <p>With nothing configured Shady is <a href="/demo/tide/">Tide</a>. <a href="/docs/customizing/">Build on it</a> with a few lines of Lua, copy it with <code>shady-rice eject</code> and rewrite it, or pick another rice such as <a href="/demo/horizon/">Horizon</a> or <a href="/demo/afterglow/">Afterglow</a>.</p>
           </div>
         </article>
       </div>
@@ -105,7 +103,7 @@ SHADY_RICE=objects nix run github:gloaming-dusk/shady</code></pre>
           <pre><code>nix develop
 ./tools/build.sh
 
-WLR_BACKENDS=wayland ./build/shady -s foot</code></pre>
+WLR_BACKENDS=wayland ./build/shady</code></pre>
         </div>
 
 
@@ -135,7 +133,7 @@ WLR_BACKENDS=wayland ./build/shady -s foot</code></pre>
             the compositor, shady-shell, the rices and, if you like, the Shady
             greeter for greetd.
           </p>
-          <p><code>programs.shady.rice</code> picks the rice used for whatever you have not configured in <code>~/.config/shady/</code>: <code>horizon</code>, <code>objects</code>, <code>afterglow</code>{tide ? <>, <code>neon-transit</code> or <code>tide</code></> : <> or <code>neon-transit</code></>}. See the <a href="/docs/greeter/">greeter docs</a> for the login screen{tide && <>; <code>programs.shady.greeter.theme = "tide"</code> gives it Tide's look</>}.</p>
+          <p>The session and the greeter are Tide's unless you say otherwise: <code>programs.shady.rice</code> picks another rice for whatever you have not configured in <code>~/.config/shady/</code>, and <code>programs.shady.greeter.theme</code> the login screen. See the <a href="/docs/greeter/">greeter docs</a>.</p>
         </div>
         <div class="code-window">
           <div class="code-title">flake.nix</div>

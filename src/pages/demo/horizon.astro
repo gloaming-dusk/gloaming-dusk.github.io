@@ -54,12 +54,12 @@ const shortcuts: Array<[string[], string]> = [
 ---
 <BaseLayout
   title="Horizon · Shady"
-  description="Horizon, Shady's default rice: shady-shell living in a procedural sky above the sea, with the time across the sky, notifications as words, a constellation launcher and a 3D glass control center."
+  description="Horizon, a rice for Shady: shady-shell living in a procedural sky above the sea, with the time across the sky, notifications as words, a constellation launcher and a 3D glass control center."
   path="/demo/horizon/"
 >
   <header class="page-hero">
     <div class="shell">
-      <p class="eyebrow">The default rice</p>
+      <p class="eyebrow">A rice</p>
       <h1><span class="gradient-text">Horizon</span></h1>
       <p class="lede">
         shady-shell living in <a href="/demo/afterglow/">Afterglow</a>'s sky. There is no
@@ -128,9 +128,9 @@ const shortcuts: Array<[string[], string]> = [
             <p class="eyebrow">Run it</p>
             <h2>Nested, or as your session.</h2>
             <p class="lede">
-              The launcher starts shady-shell and a terminal. On NixOS, Horizon is
-              what <code>programs.shady.enable</code> gives everyone who has not
-              written their own config.
+              The launcher starts shady-shell and a terminal. On NixOS, set
+              <code>programs.shady.rice</code> to make it the session for everyone
+              who has not written their own config.
             </p>
           </div>
           <div class="code-window">
@@ -139,7 +139,7 @@ const shortcuts: Array<[string[], string]> = [
 ./tools/build.sh
 ./rices/horizon/run.sh
 
-# NixOS: the default rice
+# NixOS
 programs.shady.rice = "horizon";</code></pre>
           </div>
         </div>

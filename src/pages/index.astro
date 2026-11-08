@@ -1,14 +1,13 @@
 ---
 import { Code } from 'astro:components';
 import BaseLayout from '../layouts/BaseLayout.astro';
-import HourVideo from '../components/HourVideo.astro';
 import horizonShot from '@shady/rices/horizon/preview.jpg';
-import objectsShot from '@shady/rices/objects/preview.jpg';
 import afterglowShot from '@shady/rices/afterglow/preview.jpg';
-import neonShot from '@shady/rices/neon-transit/preview.jpg';
 import { tide } from '../lib/tide';
 
 const repo = 'https://github.com/gloaming-dusk/shady';
+const previewOf = (name: string) =>
+  `https://raw.githubusercontent.com/gloaming-dusk/shady-rice-${name}/main/preview.jpg`;
 
 const metrics = [
   ['wlroots 0.20.2', 'Wayland core'],
@@ -17,105 +16,52 @@ const metrics = [
   ['Lua 5.4', 'Config + runtime']
 ];
 
-const features: Array<{ kicker: string; title: string; body: string; icon: string; wide?: boolean }> = [
-  ...(tide ? [{
-    kicker: 'Tile',
-    wide: true,
-    title: 'A scrolling layout',
-    body: 'layout = "scrolling" tiles each workspace as a strip of columns that glides sideways, as in niri: touchpad swipes, workspace slides, and a 3D overview of the whole strip.',
-    icon: '<rect x="2" y="5" width="6" height="14" rx="1.5"/><rect x="9" y="5" width="6" height="14" rx="1.5"/><path d="M17 5h4M17 19h4M21 5v14"/>'
-  }] : []),
-  {
-    kicker: 'Render',
-    title: 'A real perspective world',
-    body: 'xdg-shell clients become lit 3D panes with rounded glass frames, depth, wobble and shadows. Drawing, picking and collision share one geometry.',
-    icon: '<path d="M12 3 4 7.5v9L12 21l8-4.5v-9L12 3Z"/><path d="m4 7.5 8 4.5 8-4.5M12 12v9"/>'
-  },
-  {
-    kicker: 'Extend',
-    title: 'Hot-reloadable C plugins',
-    body: 'Window representations, render hooks with the live camera, input and per-window shaders. ABI v2 migrates state across reloads.',
-    icon: '<path d="M9 3v4M15 3v4M7 7h10v4a5 5 0 0 1-10 0V7ZM12 16v5"/>'
-  },
-  {
-    kicker: 'Script',
-    title: 'Lua, twice',
-    body: 'config.lua shapes the compositor before modules resolve; init.lua reacts to windows, workspaces and keys at runtime.',
-    icon: '<path d="m8 8-4 4 4 4M16 8l4 4-4 4M14 5l-4 14"/>'
-  },
-  {
-    kicker: 'Verify',
-    title: 'Headless, sanitized tests',
-    body: 'Drive input, timers and screenshots from Lua against a headless GLES2 backend, under AddressSanitizer and UBSan.',
-    icon: '<path d="M9 3h6M10 3v6l-5 9a2 2 0 0 0 1.8 3h10.4a2 2 0 0 0 1.8-3l-5-9V3"/><path d="M7.5 15h9"/>'
-  },
-  {
-    kicker: 'Fallback',
-    title: 'A safe scene-graph path',
-    body: '--safe drops the spatial renderer for a conventional wlroots scene graph, so a broken experiment never locks you out.',
-    icon: '<path d="M12 3 5 6v5c0 4.5 3 8.3 7 10 4-1.7 7-5.5 7-10V6l-7-3Z"/><path d="m9 12 2 2 4-4"/>'
-  },
-  {
-    kicker: 'Layers',
-    title: 'Panels in the 3D world',
-    body: 'Any layer-shell client, shady-shell or waybar alike, can be frosted, blurred or turned in perspective, and pointer input still lands where it is drawn.',
-    icon: '<rect x="3" y="4" width="18" height="16" rx="3"/><path d="M3 9h18M7 6.5h.01M10 6.5h.01"/>'
-  }
-];
-
-const programs = [
-  {
-    name: 'shady',
-    role: 'The compositor',
-    body: 'Owns the Wayland objects, the GPU, input and the 3D world. Turns xdg-shell windows into lit objects, or runs a plain scene graph with --safe.',
-    points: [
-      'Perspective GLES2 renderer, physics and first-person mode',
-      'Hot-reloadable C plugins with an ABI v2 state migration',
-      'config.lua + init.lua, an IPC socket and shadyctl',
-      'Headless automation under ASan and UBSan'
-    ],
-    docs: '/docs/lua-api/',
-    docsLabel: 'Lua API'
-  },
-  {
-    name: 'shady-shell',
-    role: 'The desktop shell',
-    body: 'A separate Wayland client that draws the desktop around the windows. Everything it shows is a Lua widget tree, and saving the file reloads it in place.',
-    points: [
-      'Bars, docks, launchers and control centers, one per output, HiDPI',
-      'A notification server, wrapped text and input-method typing',
-      'GLSL shaders over any widget, native shell plugins',
-      'Background and bottom layers for wallpapers and clocks',
-      ...(tide ? ['Lock screens with PAM, password and fingerprint at once'] : [])
-    ],
-    docs: '/docs/shell-lua-api/',
-    docsLabel: 'Shell Lua API'
-  }
-];
-
-const riceCount = tide ? 'Five' : 'Four';
-
 const everyday = [
-  ['Scrolling columns', 'niri\'s model and niri\'s keys: new windows open beside the focused one, and the strip glides to keep it on screen.'],
-  ['A whole shell', 'A glass bar with a minimap of the strip, control center, launcher with a calculator, power menu, OSD and notifications.'],
-  ['Lock and login', 'Its own lock screen, password and fingerprint at once, and a greeter for greetd that replaces your display manager.'],
+  ['Scrolling columns', 'niri\'s model and niri\'s keys: new windows open beside the focused one, and the strip glides to keep it on screen. Tap Super for a 3D overview, and type to search.'],
+  ['A whole shell', 'A glass bar with a minimap of the strip, control center, launcher with a calculator, screenshot picker, power menu, OSD and notifications.'],
+  ['Lock and login', 'Its own lock screen, password and fingerprint at once, and a login screen for greetd drawn the same way, so logging in only fills in the windows.'],
   ['Light when idle', 'Rendering on demand, a shell that repaints only what changed, and idle timeouts that a playing video holds back.']
 ];
 
-const luaSnippet = `-- config.lua — shape the compositor
-shady.set("window_corner_radius", 14.0)
-shady.set("window_border_focus_color", "#FFB070")
-shady.set("floor_horizon_fog", 1.0)
-shady.plugin("build/libshady-plugin-afterglow.so")
+const depths = [
+  {
+    title: 'Use it',
+    body: 'Nothing to configure. Install Shady and this is the desktop, with a wallpaper and a few settings if you want them.',
+    code: '~/.config/shady/wallpaper.png'
+  },
+  {
+    title: 'Build on it',
+    body: 'Start your config from Tide and change colours and keys, or add bar islands, control center tiles and launcher results. Tide\'s updates keep reaching you.',
+    code: 'shell.base("tide", { ... })'
+  },
+  {
+    title: 'Take it apart',
+    body: 'Copy all of Tide into your config directory. The whole shell, the keys and the look are then plain Lua files of your own.',
+    code: 'shady-rice eject'
+  },
+  {
+    title: 'Start from nothing',
+    body: 'Underneath is still the bare 3D compositor. Every rice and plugin made for it keeps working, and you can write your own from a blank file.',
+    code: 'SHADY_RICE=none'
+  }
+];
 
--- init.lua — react to the desktop
-shady.bind("Super+Return", function()
-    shady.spawn("foot")
-end)
+const layerSnippet = `-- ~/.config/shady/init.lua
+shady.base("tide")
+shady.bind("Super+b", function()
+    shady.spawn("firefox")
+end, "Browser")
 
-shady.on("window.mapped", function(window)
-    shady.log("arrived: " .. window.app_id)
-end)`;
+-- ~/.config/shady/shell.lua
+local tide
+tide = shell.base("tide", {
+    palette = { accent = "#FF9E64" },
+    bar = { right = function(ctx)
+        return tide.island {
+            tide.text(shell.date("Week %V"))
+        }
+    end },
+})`;
 
 const cSnippet = `/* A sky that knows where the camera is. */
 static void draw(shady_host host,
@@ -131,25 +77,64 @@ static void draw(shady_host host,
 
 hook = api->render_hook_add(host,
     SHADY_RENDER_STAGE_AFTER_BACKGROUND, draw, NULL);`;
+
+const features: Array<{ kicker: string; title: string; body: string; icon: string }> = [
+  {
+    kicker: 'Render',
+    title: 'A real perspective world',
+    body: 'xdg-shell clients become lit 3D panes with rounded glass frames, depth, wobble and shadows. Drawing, picking and collision share one geometry.',
+    icon: '<path d="M12 3 4 7.5v9L12 21l8-4.5v-9L12 3Z"/><path d="m4 7.5 8 4.5 8-4.5M12 12v9"/>'
+  },
+  {
+    kicker: 'Extend',
+    title: 'Hot-reloadable C plugins',
+    body: 'Window representations, render hooks with the live camera, input and per-window shaders. ABI v2 migrates state across reloads.',
+    icon: '<path d="M9 3v4M15 3v4M7 7h10v4a5 5 0 0 1-10 0V7ZM12 16v5"/>'
+  },
+  {
+    kicker: 'Script',
+    title: 'Lua, three times',
+    body: 'config.lua shapes the compositor before modules resolve, init.lua reacts to windows and keys at runtime, and shell.lua is the desktop itself, reloaded as you save.',
+    icon: '<path d="m8 8-4 4 4 4M16 8l4 4-4 4M14 5l-4 14"/>'
+  },
+  {
+    kicker: 'Layers',
+    title: 'Panels in the 3D world',
+    body: 'Any layer-shell client, shady-shell or waybar alike, can be frosted, blurred or turned in perspective, and pointer input still lands where it is drawn.',
+    icon: '<rect x="3" y="4" width="18" height="16" rx="3"/><path d="M3 9h18M7 6.5h.01M10 6.5h.01"/>'
+  },
+  {
+    kicker: 'Verify',
+    title: 'Headless, sanitized tests',
+    body: 'Drive input, timers and screenshots from Lua against a headless GLES2 backend, under AddressSanitizer and UBSan.',
+    icon: '<path d="M9 3h6M10 3v6l-5 9a2 2 0 0 0 1.8 3h10.4a2 2 0 0 0 1.8-3l-5-9V3"/><path d="M7.5 15h9"/>'
+  },
+  {
+    kicker: 'Fallback',
+    title: 'A safe scene-graph path',
+    body: '--safe drops the spatial renderer for a conventional wlroots scene graph, so a broken experiment never locks you out.',
+    icon: '<path d="M12 3 5 6v5c0 4.5 3 8.3 7 10 4-1.7 7-5.5 7-10V6l-7-3Z"/><path d="m9 12 2 2 4-4"/>'
+  }
+];
 ---
 <BaseLayout path="/">
   <section class="hero">
     <div class="shell">
       <p class="eyebrow">Wayland, with depth</p>
-      <h1>A compositor for <span class="gradient-text">spatial desktops.</span></h1>
+      <h1>A desktop you can live in, <span class="gradient-text">and take apart.</span></h1>
       <p class="lede">
-        Shady turns ordinary Wayland windows into objects in a shared 3D world, and
-        shady-shell draws the desktop around them — with a conventional scene-graph
-        path for the days you just need to work.
+        Shady is Tide out of the box: scrolling columns, a quiet glass shell, its own
+        lock and login screens. Underneath is a 3D compositor, and every layer of it
+        is yours to change, from one setting to all of it.
       </p>
       <div class="button-row">
-        <a class="button primary" href="/getting-started/">Build Shady</a>
-        <a class="button" href="/demo/horizon/">Watch Horizon</a>
-        <a class="button" href="/docs/">Read the docs</a>
+        <a class="button primary" href="/getting-started/">Try it</a>
+        <a class="button" href="/demo/tide/">See Tide</a>
+        <a class="button" href="/docs/customizing/">Customize it</a>
       </div>
 
       <div class="stage">
-        <HourVideo tag="Live Wayland surfaces · shady-shell · one C plugin" />
+        <img src={tide.preview.src} width={tide.preview.width} height={tide.preview.height} alt="Tide: three terminals in a strip of columns under a glass bar with a minimap of the strip, and a notification at the top right" />
       </div>
 
       <div class="metrics">
@@ -160,87 +145,73 @@ hook = api->render_hook_add(host,
     </div>
   </section>
 
-  <section class="section" id="shell">
+  <section class="section" id="tide">
     <div class="shell">
       <div class="section-head">
         <div>
-          <p class="eyebrow">Two programs</p>
-          <h2>A compositor and its shell.</h2>
+          <p class="eyebrow">The default desktop</p>
+          <h2>Tide: tiling, without leaving the depth.</h2>
         </div>
         <p>
-          The compositor and the shell are separate processes that talk over the
-          shady-shell protocol, so either can be swapped: run shady-shell's bar,
-          or waybar, or nothing at all.
+          Made to be the desktop you use all day, with everything one needs,
+          from the first thing you see at boot to the screen you lock.
         </p>
       </div>
-      <div class="programs">
-        {programs.map((program) => (
-          <article class="card program">
-            <p class="program-role">{program.role}</p>
-            <h3><code>{program.name}</code></h3>
-            <p>{program.body}</p>
-            <ul>
-              {program.points.map((point) => <li>{point}</li>)}
-            </ul>
-            <a class="program-link" href={program.docs}>{program.docsLabel} →</a>
-          </article>
-        ))}
+      <div class="everyday">
+        <a class="everyday-shot" href="/demo/tide/">
+          <img src={tide.overview.src} width={tide.overview.width} height={tide.overview.height} loading="lazy" alt="Tide's overview: the camera pulled back over the strip of columns" />
+        </a>
+        <ul class="everyday-list">
+          {everyday.map(([title, body]) => (
+            <li><strong>{title}</strong><span>{body}</span></li>
+          ))}
+          <li class="everyday-link"><a href="/demo/tide/">See Tide →</a></li>
+        </ul>
+      </div>
+      <div class="tide-gallery">
+        <a href="/demo/tide/"><img src={tide.control.src} width={tide.control.width} height={tide.control.height} loading="lazy" alt="Tide's control center" /></a>
+        <a href="/demo/tide/"><img src={tide.launcher.src} width={tide.launcher.width} height={tide.launcher.height} loading="lazy" alt="Tide's launcher" /></a>
+        <a href="/demo/tide/"><img src={tide.lock.src} width={tide.lock.width} height={tide.lock.height} loading="lazy" alt="Tide's lock screen, which the login screen matches" /></a>
       </div>
     </div>
   </section>
 
-  {tide && (
-    <section class="section" id="tide">
-      <div class="shell">
-        <div class="section-head">
-          <div>
-            <p class="eyebrow">For every day</p>
-            <h2>Tide: tiling, without leaving the depth.</h2>
-          </div>
-          <p>
-            Tide is the rice to live in: the scrolling layout under a quiet glass
-            shell, with everything a desktop needs, from the lock screen to the
-            login screen.
-          </p>
-        </div>
-        <div class="everyday">
-          <a class="everyday-shot" href="/demo/tide/">
-            <img src={tide.preview.src} width={tide.preview.width} height={tide.preview.height} loading="lazy" alt="Tide: three terminals in a strip of columns under a glass bar with a minimap of the strip, and a notification at the top right" />
-          </a>
-          <ul class="everyday-list">
-            {everyday.map(([title, body]) => (
-              <li><strong>{title}</strong><span>{body}</span></li>
-            ))}
-            <li class="everyday-link"><a href="/demo/tide/">See Tide →</a></li>
-          </ul>
-        </div>
-      </div>
-    </section>
-  )}
-
-  <section class="section">
+  <section class="section" id="customize">
     <div class="shell">
       <div class="section-head">
         <div>
-          <p class="eyebrow">What's inside</p>
-          <h2>Experiments, with boundaries.</h2>
+          <p class="eyebrow">Make it yours</p>
+          <h2>Stop at whatever depth you like.</h2>
         </div>
         <p>
-          The compositor owns Wayland objects, GPU resources, lifetime and
-          validation. Plugins and scripts own the effects, layouts and
-          simulations layered on top, and can be swapped while it runs.
+          Most desktops let you change their settings; most compositors hand you an
+          empty screen. Here each step is a small one from the last.
         </p>
       </div>
-      <div class="card-grid">
-        {features.map((feature) => (
-          <article class={feature.wide ? 'card wide' : 'card'}>
-            <div class="card-icon">
-              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" set:html={feature.icon} />
-            </div>
-            <h3>{feature.title}</h3>
-            <p>{feature.body}</p>
+      <div class="depths">
+        {depths.map((depth, i) => (
+          <article class="depth">
+            <span class="step-index">0{i + 1}</span>
+            <h3>{depth.title}</h3>
+            <p>{depth.body}</p>
+            <code>{depth.code}</code>
           </article>
         ))}
+      </div>
+      <div class="code-grid" style="margin-top: 18px">
+        <div class="code-window">
+          <div class="code-title">on top of Tide, in Lua</div>
+          <Code code={layerSnippet} lang="lua" theme="github-dark-default" />
+        </div>
+        <div class="code-window">
+          <div class="code-title">under it, in C</div>
+          <Code code={cSnippet} lang="c" theme="github-dark-default" />
+        </div>
+      </div>
+      <div class="button-row" style="margin-top: 22px">
+        <a class="button primary" href="/docs/customizing/">Customizing guide</a>
+        <a class="button" href="/docs/shell-lua-api/">Shell Lua API</a>
+        <a class="button" href="/docs/c-plugin-api/">C plugin API</a>
       </div>
     </div>
   </section>
@@ -249,40 +220,21 @@ hook = api->render_hook_add(host,
     <div class="shell">
       <div class="section-head">
         <div>
-          <p class="eyebrow">Rices</p>
-          <h2>One compositor, different evenings.</h2>
+          <p class="eyebrow">Other evenings</p>
+          <h2>Or wear something else entirely.</h2>
         </div>
         <p>
           A rice is a compositor config, a Lua runtime layer, a shell.lua and a
-          few native plugins. {riceCount} ship with Shady; each runs nested or
-          straight from a VT, and Horizon is the default.
+          few native plugins. Set <code>SHADY_RICE</code> and the whole desktop changes.
         </p>
       </div>
       <div class="rices">
-        {tide && (
-          <a class="rice tide wide" href="/demo/tide/">
-            <img src={tide.preview.src} width={tide.preview.width} height={tide.preview.height} loading="lazy" alt="Tide: terminals tiled in scrolling columns under a floating glass bar" />
-            <div class="rice-body">
-              <h3><span class="pip"></span>Tide <span class="tag">every day</span></h3>
-              <p>niri's scrolling columns and keys, a glass bar with a live minimap of the strip, a control center, launcher, lock screen and greeter of its own. Made to replace niri and its shell.</p>
-              <span class="rice-meta">scrolling layout · 3D strip overview · PAM lock · greeter theme</span>
-            </div>
-          </a>
-        )}
         <a class="rice horizon" href="/demo/horizon/">
           <img src={horizonShot.src} width={horizonShot.width} height={horizonShot.height} loading="lazy" alt="Horizon: the time written across a sunset sky, a workspace light on the horizon and a frosted control center turned in 3D" />
           <div class="rice-body">
-            <h3><span class="pip"></span>Horizon <span class="tag">default</span></h3>
-            <p>shady-shell living in Afterglow's sky. The time is written across it, workspaces are lights on the horizon, notifications are words in the sky, and the launcher scatters applications as stars.</p>
+            <h3><span class="pip"></span>Horizon</h3>
+            <p>shady-shell living in Afterglow's sky. The time is written across it, workspaces are lights on the horizon, and the launcher scatters applications as stars.</p>
             <span class="rice-meta">no bar · 3D glass control center · constellation launcher</span>
-          </div>
-        </a>
-        <a class="rice objects" href={`${repo}/tree/main/rices/objects`}>
-          <img src={objectsShot.src} width={objectsShot.width} height={objectsShot.height} loading="lazy" alt="Objects: a two-tile desk clock and a floating dock on a paper sunset, around a terminal framed as a card" />
-          <div class="rice-body">
-            <h3><span class="pip"></span>Objects</h3>
-            <p>Chunky, tactile cards on a flat paper sunset: a desk clock, a floating dock, a control center that leans like a remote and a launcher that fans out like a hand of cards.</p>
-            <span class="rice-meta">ink outlines · sticker notifications · card-deck launcher · on GitHub ↗</span>
           </div>
         </a>
         <a class="rice" href="/demo/afterglow/">
@@ -293,8 +245,16 @@ hook = api->render_hook_add(host,
             <span class="rice-meta">afterglow plugin · camera-aware sky · sinking close</span>
           </div>
         </a>
-        <a class="rice neon" href={`${repo}/tree/main/rices/neon-transit`}>
-          <img src={neonShot.src} width={neonShot.width} height={neonShot.height} loading="lazy" alt="Neon Transit: cyan-rimmed windows with liquid water surfaces over a neon grid" />
+        <a class="rice objects" href="https://github.com/gloaming-dusk/shady-rice-objects">
+          <img src={previewOf('objects')} loading="lazy" alt="Objects: a two-tile desk clock and a floating dock on a paper sunset, around a terminal framed as a card" />
+          <div class="rice-body">
+            <h3><span class="pip"></span>Objects</h3>
+            <p>Chunky, tactile cards on a flat paper sunset: a desk clock, a floating dock and a launcher that fans out like a hand of cards.</p>
+            <span class="rice-meta">ink outlines · card-deck launcher · on GitHub ↗</span>
+          </div>
+        </a>
+        <a class="rice neon" href="https://github.com/gloaming-dusk/shady-rice-neon-transit">
+          <img src={previewOf('neon-transit')} loading="lazy" alt="Neon Transit: cyan-rimmed windows over a neon grid" />
           <div class="rice-body">
             <h3><span class="pip"></span>Neon Transit</h3>
             <p>Night trains and terminal glow: a cyan grid floor, liquid water-surface windows and a native 3D overview.</p>
@@ -309,23 +269,25 @@ hook = api->render_hook_add(host,
     <div class="shell">
       <div class="section-head">
         <div>
-          <p class="eyebrow">Make it yours</p>
-          <h2>Configure in Lua. Extend in C.</h2>
+          <p class="eyebrow">Underneath</p>
+          <h2>Experiments, with boundaries.</h2>
         </div>
         <p>
-          Everything above is built from these two layers. The same Lua runtime
-          drives the headless test suite, and plugins never touch raw GL state.
+          The compositor owns Wayland objects, GPU resources, lifetime and
+          validation. Plugins and scripts own the effects, layouts and
+          simulations layered on top, and can be swapped while it runs.
         </p>
       </div>
-      <div class="code-grid">
-        <div class="code-window">
-          <div class="code-title">config.lua + init.lua</div>
-          <Code code={luaSnippet} lang="lua" theme="github-dark-default" />
-        </div>
-        <div class="code-window">
-          <div class="code-title">plugins/afterglow.c</div>
-          <Code code={cSnippet} lang="c" theme="github-dark-default" />
-        </div>
+      <div class="card-grid">
+        {features.map((feature) => (
+          <article class="card">
+            <div class="card-icon">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" set:html={feature.icon} />
+            </div>
+            <h3>{feature.title}</h3>
+            <p>{feature.body}</p>
+          </article>
+        ))}
       </div>
     </div>
   </section>
@@ -335,10 +297,10 @@ hook = api->render_hook_add(host,
       <div class="cta">
         <div>
           <p class="eyebrow">Fast path</p>
-          <h2>From checkout to a nested compositor.</h2>
+          <h2>One command, in a window.</h2>
           <p>
-            The Nix shell pins wlroots and the whole toolchain. Start nested inside
-            your current session, then move to a real VT once the basics are solid.
+            From any Wayland desktop with Nix. Nothing is installed, and closing
+            the window ends it.
           </p>
           <div class="button-row">
             <a class="button primary" href="/getting-started/">Getting started</a>
@@ -347,11 +309,7 @@ hook = api->render_hook_add(host,
         </div>
         <div class="code-window">
           <div class="code-title">terminal</div>
-          <pre><code>nix develop
-./tools/build.sh
-
-# nested, with the default Horizon rice
-./rices/horizon/run.sh</code></pre>
+          <pre><code>nix run github:gloaming-dusk/shady</code></pre>
         </div>
       </div>
     </div>
