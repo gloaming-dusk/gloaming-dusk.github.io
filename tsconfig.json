@@ -2,7 +2,12 @@
   "extends": "astro/tsconfigs/strict",
   "compilerOptions": {
     "paths": {
-      "@shady/*": ["./shady/*"]
+      "@shady/*": ["./shady/*"],
+      "@shady-shell/*": ["./shady-shell/*"],
+      "@shady-greeter/*": ["./shady-greeter/*"],
+      "@gloam/*": ["./gloam/*"],
+      "@afterglow/*": ["./shady-rice-afterglow/*"],
+      "@horizon/*": ["./shady-rice-horizon/*"]
     }
   }
 }

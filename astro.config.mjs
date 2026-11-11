@@ -3,9 +3,18 @@ import { unified } from '@astrojs/markdown-remark';
 import { fileURLToPath } from 'node:url';
 import path from 'node:path';
 
-// The Shady checkout (or a symlink to one) whose docs/*.md and rice images
-// the site renders; the Pages workflow checks it out here.
-const shadyDir = path.resolve(fileURLToPath(new URL('.', import.meta.url)), 'shady');
+// Checkouts (or symlinks to them) of the repositories whose docs and images
+// the site renders; the Pages workflow checks each out here, under its name.
+const here = fileURLToPath(new URL('.', import.meta.url));
+const checkout = (name) => path.resolve(here, name);
+const repos = {
+  '@shady': checkout('shady'),
+  '@shady-shell': checkout('shady-shell'),
+  '@shady-greeter': checkout('shady-greeter'),
+  '@gloam': checkout('gloam'),
+  '@afterglow': checkout('shady-rice-afterglow'),
+  '@horizon': checkout('shady-rice-horizon')
+};
 
 const docSlug = (value) =>
   value
@@ -16,10 +25,19 @@ const docSlug = (value) =>
     .replace(/_/g, '-')
     .toLowerCase();
 
+// Links between the docs, also across repositories, stay on the site.
+const githubDoc =
+  /^https:\/\/github\.com\/gloaming-dusk\/(?:shady|shady-shell)\/blob\/main\/docs\/([^/?#]+\.md)([?#].*)?$/i;
+const githubGreeter = /^https:\/\/github\.com\/gloaming-dusk\/shady-greeter\/?(?:blob\/main\/README\.md)?([?#].*)?$/i;
+
 function rewriteRepositoryDocLinks() {
   return (tree) => {
     const walk = (node) => {
       if (node?.type === 'link' && typeof node.url === 'string') {
+        const doc = node.url.match(githubDoc);
+        const greeter = node.url.match(githubGreeter);
+        if (doc) node.url = `/docs/${docSlug(doc[1])}/${doc[2] ?? ''}`;
+        else if (greeter) node.url = `/docs/greeter/${greeter[1] ?? ''}`;
         const match = node.url.match(/^([^?#]+\.md)([?#].*)?$/i);
         if (match && !match[1].startsWith('/')) {
           node.url = `/docs/${docSlug(match[1])}/${match[2] ?? ''}`;
@@ -37,10 +55,10 @@ export default defineConfig({
   site: process.env.SITE_URL || undefined,
   vite: {
     resolve: {
-      alias: { '@shady': shadyDir }
+      alias: repos
     },
     server: {
-      fs: { allow: ['.', shadyDir] }
+      fs: { allow: ['.', ...Object.values(repos)] }
     }
   },
   markdown: {

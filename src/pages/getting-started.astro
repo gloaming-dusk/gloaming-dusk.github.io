@@ -18,7 +18,7 @@ const flakeSnippet = `{
 ---
 <BaseLayout
   title="Getting started · Gloam"
-  description="Build and run Shady and shady-shell nested, in safe mode, from a Linux VT, or as a NixOS login session."
+  description="Build and run Shady, shady-shell and Gloam nested, in safe mode, from a Linux VT, or as a NixOS login session."
   path="/getting-started/"
 >
   <header class="page-hero">
@@ -41,16 +41,17 @@ const flakeSnippet = `{
           <p class="eyebrow">One command</p>
           <h2>Try it in a window.</h2>
           <p class="lede">
-            From any Wayland desktop with Nix, this builds Shady and opens Tide, the
-            default desktop, inside a window, with a terminal. Press <code>Super+Shift+/</code> to see
+            From any Wayland desktop with Nix, the first builds Gloam and opens Tide, the
+            whole desktop with its shell, inside a window, with a terminal. The second is
+            Shady alone: Tide's layout and keys, no shell. Press <code>Super+Shift+/</code> to see
             every shortcut of the session.
           </p>
-          <p><code>SHADY_RICE=horizon</code> in front picks another rice. Run from a text console, it starts full screen.</p>
+          <p>Run from a text console, either starts full screen. Other rices, such as <a href="/demo/afterglow/">Afterglow</a>, are packages of their own.</p>
         </div>
         <div class="code-window">
           <div class="code-title">nix run</div>
-          <pre><code>nix run github:gloaming-dusk/shady
-SHADY_RICE=horizon nix run github:gloaming-dusk/shady</code></pre>
+          <pre><code>nix run github:gloaming-dusk/gloam
+nix run github:gloaming-dusk/shady</code></pre>
         </div>
       </div>
     </section>
@@ -127,10 +128,10 @@ WLR_BACKENDS=wayland ./build/shady</code></pre>
           <h2>Install the whole desktop.</h2>
           <p class="lede">
             <code>programs.gloam.enable</code> adds the session and its login screen, the
-            services the shell talks to and a set of applications. Shady's own module
-            is there too, for just the compositor and shell.
+            services the shell talks to and a set of applications. Shady, shady-shell
+            and shady-greeter each have a module of their own too.
           </p>
-          <p>The session and the greeter are Tide's unless you say otherwise: <code>programs.shady.rice</code> picks another rice for whatever you have not configured in <code>~/.config/shady/</code>, and <code>programs.shady.greeter.theme</code> the login screen. See the <a href="/docs/greeter/">greeter docs</a>.</p>
+          <p>The session and the greeter are Tide's unless you say otherwise: <code>programs.shady.rice</code> picks another rice for whatever you have not configured in <code>~/.config/shady/</code>, and <code>services.shady-greeter.theme</code> the login screen. See the <a href="/docs/greeter/">greeter docs</a>.</p>
         </div>
         <div class="code-window">
           <div class="code-title">flake.nix</div>

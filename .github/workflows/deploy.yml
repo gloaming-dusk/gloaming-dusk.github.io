@@ -1,8 +1,9 @@
 name: Deploy
 
-# The site renders Shady's docs/ and rice images, from its main branch. A
-# change here deploys on push; a change to Shady's docs on the daily run, or
-# right away by running this workflow by hand.
+# The site renders the docs and images of Shady, shady-shell, shady-greeter,
+# Gloam and the Afterglow and Horizon rices, from their main branches. A
+# change here deploys on push; a change there on the daily run, or right away
+# by running this workflow by hand.
 on:
   push:
     branches: [main]
@@ -27,11 +28,41 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v4
 
-      - name: Checkout Shady
+      - name: Checkout shady
         uses: actions/checkout@v4
         with:
           repository: gloaming-dusk/shady
           path: shady
+
+      - name: Checkout shady-shell
+        uses: actions/checkout@v4
+        with:
+          repository: gloaming-dusk/shady-shell
+          path: shady-shell
+
+      - name: Checkout shady-greeter
+        uses: actions/checkout@v4
+        with:
+          repository: gloaming-dusk/shady-greeter
+          path: shady-greeter
+
+      - name: Checkout gloam
+        uses: actions/checkout@v4
+        with:
+          repository: gloaming-dusk/gloam
+          path: gloam
+
+      - name: Checkout shady-rice-afterglow
+        uses: actions/checkout@v4
+        with:
+          repository: gloaming-dusk/shady-rice-afterglow
+          path: shady-rice-afterglow
+
+      - name: Checkout shady-rice-horizon
+        uses: actions/checkout@v4
+        with:
+          repository: gloaming-dusk/shady-rice-horizon
+          path: shady-rice-horizon
 
       - name: Configure Pages
         id: pages

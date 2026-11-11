@@ -2,7 +2,6 @@
 import BaseLayout from '../../layouts/BaseLayout.astro';
 import { tide } from '../../lib/tide';
 
-const repo = 'https://github.com/gloaming-dusk/shady';
 
 const pieces = [
   {
@@ -115,9 +114,7 @@ const shortcuts: Array<[string[], string]> = [
           </div>
           <div class="code-window">
             <div class="code-title">terminal</div>
-            <pre><code>nix develop
-./tools/build.sh
-WLR_BACKENDS=wayland ./build/shady
+            <pre><code>nix run github:gloaming-dusk/gloam
 
 # NixOS
 programs.gloam.enable = true;</code></pre>
@@ -153,7 +150,7 @@ programs.gloam.enable = true;</code></pre>
         </div>
         <div class="button-row" style="margin-top: 0">
           <a class="button primary" href="/docs/customizing/">Customizing</a>
-          <a class="button" href={`${repo}/tree/main/rices/tide`}>Source ↗</a>
+          <a class="button" href="https://github.com/gloaming-dusk/gloam/tree/main/rices/tide">Source ↗</a>
         </div>
       </div>
     </div>

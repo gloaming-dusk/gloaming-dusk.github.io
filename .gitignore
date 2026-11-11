@@ -1,6 +1,11 @@
 /node_modules/
 /dist/
 /.astro/
-# The Shady checkout the site renders docs and images from (see README.md).
+# The checkouts the site renders docs and images from (see README.md).
 /shady
+/shady-shell
+/shady-greeter
+/gloam
+/shady-rice-afterglow
+/shady-rice-horizon
 /result

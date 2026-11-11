@@ -16,7 +16,7 @@ const descriptions: Record<string, string> = {
   'shell-lua-api': 'Widget trees, live command output, popups, layers, and shaders for shady-shell.',
   'shell-plugin-api': 'Native shady-shell plugins that publish values, register actions, and draw widgets.',
   'shell-design': 'How shady-shell and the compositor divide the desktop between them.',
-  greeter: 'The greetd login screen built from Shady and shady-shell, and its NixOS option.',
+  greeter: 'The greetd login screen built from Shady and shady-shell (its own repository), and its NixOS module.',
   'environment-api': 'Static 3D environments, authored collision, and asset-loader plugins.',
   'plugin-manager': 'Loading native plugins by name from Lua with shady.plugins.',
   desktop: 'Render paths, the protocols clients and other bars use, and how shady-shell connects.',
@@ -34,8 +34,9 @@ const descriptions: Record<string, string> = {
       <p class="eyebrow">Documentation</p>
       <h1>One source of truth.</h1>
       <p class="lede">
-        These pages are rendered directly from the repository's existing
-        <code>docs/*.md</code> files, so the website and source tree stay in sync.
+        These pages are rendered directly from the <code>docs/*.md</code> files of
+        Shady and shady-shell and the greeter's README, so the website and the
+        source trees stay in sync.
       </p>
     </div>
   </header>

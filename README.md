@@ -2,17 +2,24 @@
 
 The project website is a static [Astro](https://astro.build/) site.
 
-Shady's documentation is not duplicated into the site. The site renders a
-checkout of [gloaming-dusk/shady](https://github.com/gloaming-dusk/shady):
-the Astro content collection loads Markdown directly from its `docs/*.md`,
-and pages import the rice previews from its `rices/` through the `@shady`
-alias. The checkout is `./shady`, ignored by git; it can be a symlink to a
-Shady checkout elsewhere.
+The documentation is not duplicated into the site. The site renders
+checkouts of the repositories it describes: the Astro content collection
+loads Markdown directly from [shady](https://github.com/gloaming-dusk/shady)'s
+and [shady-shell](https://github.com/gloaming-dusk/shady-shell)'s `docs/*.md`
+and [shady-greeter](https://github.com/gloaming-dusk/shady-greeter)'s README,
+and pages import images from [Gloam](https://github.com/gloaming-dusk/gloam)
+(Tide), [shady-rice-afterglow](https://github.com/gloaming-dusk/shady-rice-afterglow)
+and [shady-rice-horizon](https://github.com/gloaming-dusk/shady-rice-horizon)
+through the `@gloam`, `@afterglow` and `@horizon` aliases. Each checkout is
+`./<repository name>`, ignored by git; each can be a symlink to a checkout
+elsewhere.
 
 ## Development
 
 ```sh
-git clone https://github.com/gloaming-dusk/shady   # or: ln -s ../shady shady
+for r in shady shady-shell shady-greeter gloam shady-rice-afterglow shady-rice-horizon; do
+  git clone https://github.com/gloaming-dusk/$r   # or: ln -s ../$r $r
+done
 nix develop
 npm ci
 npm run dev
@@ -31,7 +38,7 @@ The static output is written to `dist/`.
 
 The site is served at <https://gloaming-dusk.github.io/> and deploys from this
 repository (`.github/workflows/deploy.yml`) on every push to `main`. It builds
-against Shady's `main` branch, so a change to Shady's docs appears on the daily
+against those repositories' `main` branches, so a change to their docs appears on the daily
 run, or right away with `gh workflow run deploy.yml`. Pull requests are checked
 but not deployed.
 

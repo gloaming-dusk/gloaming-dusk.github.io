@@ -1,10 +1,10 @@
 ---
 import BaseLayout from '../../layouts/BaseLayout.astro';
 import HourVideo from '../../components/HourVideo.astro';
-import golden from '@shady/rices/afterglow/hour-golden-hour.jpg';
-import afterglow from '@shady/rices/afterglow/hour-afterglow.jpg';
-import blue from '@shady/rices/afterglow/hour-blue-hour.jpg';
-import night from '@shady/rices/afterglow/hour-night.jpg';
+import golden from '@afterglow/hour-golden-hour.jpg';
+import afterglow from '@afterglow/hour-afterglow.jpg';
+import blue from '@afterglow/hour-blue-hour.jpg';
+import night from '@afterglow/hour-night.jpg';
 
 const hours = [
   { image: golden, name: 'Golden hour', note: 'gold rim', color: '#ffcf8a' },
@@ -81,15 +81,15 @@ const shortcuts: Array<[string[], string]> = [
           </div>
           <div class="code-window">
             <div class="code-title">terminal</div>
-            <pre><code>nix develop
-./tools/build.sh
-./rices/afterglow/run.sh
+            <pre><code>git clone https://github.com/gloaming-dusk/shady-rice-afterglow
+cd shady-rice-afterglow   # next to built shady and shady-shell
+nix develop ../shady -c ./run.sh
 
 # On a real Linux VT
-./rices/afterglow/run-native.sh
+./run-native.sh
 
 # Start at another hour
-SHADY_AFTERGLOW_PHASE="blue hour" ./rices/afterglow/run.sh</code></pre>
+SHADY_AFTERGLOW_PHASE="blue hour" ./run.sh</code></pre>
           </div>
         </div>
       </section>
@@ -142,7 +142,7 @@ SHADY_AFTERGLOW_PHASE="blue hour" ./rices/afterglow/run.sh</code></pre>
         </div>
         <div class="button-row" style="margin-top: 0">
           <a class="button primary" href="/docs/c-plugin-api/">C plugin API</a>
-          <a class="button" href="https://github.com/gloaming-dusk/shady/tree/main/rices/afterglow">Rice source ↗</a>
+          <a class="button" href="https://github.com/gloaming-dusk/shady-rice-afterglow">Rice source ↗</a>
         </div>
       </div>
     </div>

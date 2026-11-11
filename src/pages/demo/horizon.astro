@@ -1,15 +1,14 @@
 ---
 import BaseLayout from '../../layouts/BaseLayout.astro';
 import HourVideo from '../../components/HourVideo.astro';
-import golden from '@shady/rices/horizon/hour-golden-hour.jpg';
-import afterglow from '@shady/rices/horizon/hour-afterglow.jpg';
-import blue from '@shady/rices/horizon/hour-blue-hour.jpg';
-import night from '@shady/rices/horizon/hour-night.jpg';
-import notification from '@shady/rices/horizon/notification.jpg';
-import launcher from '@shady/rices/horizon/launcher.jpg';
-import control from '@shady/rices/horizon/control.jpg';
+import golden from '@horizon/hour-golden-hour.jpg';
+import afterglow from '@horizon/hour-afterglow.jpg';
+import blue from '@horizon/hour-blue-hour.jpg';
+import night from '@horizon/hour-night.jpg';
+import notification from '@horizon/notification.jpg';
+import launcher from '@horizon/launcher.jpg';
+import control from '@horizon/control.jpg';
 
-const repo = 'https://github.com/gloaming-dusk/shady';
 
 const hours = [
   { image: golden, name: 'Golden hour', note: 'the light is golden', color: '#ffcf8a' },
@@ -128,18 +127,20 @@ const shortcuts: Array<[string[], string]> = [
             <p class="eyebrow">Run it</p>
             <h2>Nested, or as your session.</h2>
             <p class="lede">
-              The launcher starts shady-shell and a terminal. On NixOS, set
-              <code>programs.shady.rice</code> to make it the session for everyone
-              who has not written their own config.
+              Horizon is built on Afterglow; clone both next to built Shady and
+              shady-shell checkouts. On NixOS, add both packages to
+              <code>programs.shady.rices</code> and set <code>programs.shady.rice</code>
+              to make it the session for everyone who has not written their own config.
             </p>
           </div>
           <div class="code-window">
             <div class="code-title">terminal</div>
-            <pre><code>nix develop
-./tools/build.sh
-./rices/horizon/run.sh
+            <pre><code>git clone https://github.com/gloaming-dusk/shady-rice-horizon
+git clone https://github.com/gloaming-dusk/shady-rice-afterglow
+nix develop ./shady -c ./shady-rice-horizon/run.sh
 
 # NixOS
+programs.shady.rices = [ horizon afterglow ];
 programs.shady.rice = "horizon";</code></pre>
           </div>
         </div>
@@ -173,7 +174,7 @@ programs.shady.rice = "horizon";</code></pre>
         </div>
         <div class="button-row" style="margin-top: 0">
           <a class="button primary" href="/docs/shell-lua-api/">Shell Lua API</a>
-          <a class="button" href={`${repo}/tree/main/rices/horizon`}>Rice source ↗</a>
+          <a class="button" href="https://github.com/gloaming-dusk/shady-rice-horizon">Rice source ↗</a>
         </div>
       </div>
     </div>
